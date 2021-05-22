@@ -2,8 +2,10 @@ package com.axiaobug.db.pms;
 
 import com.axiaobug.pojo.pms.PmsProductAttribute;
 import com.axiaobug.pojo.pms.PmsProductAttributeCategory;
+import com.axiaobug.pojo.pms.PmsProductAttributeValue;
 import com.axiaobug.repository.pms.PmsProductAttributeCategoryRepository;
 import com.axiaobug.repository.pms.PmsProductAttributeRepository;
+import com.axiaobug.repository.pms.PmsProductAttributeValueRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,9 @@ public class AttributeTest {
     @Autowired
     private PmsProductAttributeRepository pmsProductAttributeRepository;
 
+    @Autowired
+    private PmsProductAttributeValueRepository pmsProductAttributeValueRepository;
+
     @Test
     public void attributeCategoryTest(){
         PmsProductAttributeCategory productAttributeCategory = new PmsProductAttributeCategory();
@@ -49,8 +54,13 @@ public class AttributeTest {
         pmsProductAttributeRepository.save(productAttribute);
         long count = pmsProductAttributeRepository.count();
         Assert.assertEquals(32,count);
-
     }
 
+    @Test
+    public void attributeValueTest(){
+        PmsProductAttributeValue productAttributeValue = new PmsProductAttributeValue();
+        pmsProductAttributeValueRepository.save(productAttributeValue);
+        Assert.assertEquals(71,pmsProductAttributeValueRepository.count());
+    }
 
 }

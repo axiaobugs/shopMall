@@ -42,11 +42,8 @@ public class ProductsTest {
     @Test
     public void productTest(){
         PmsProduct product = new PmsProduct();
-        product.setName("华为 Mate 40 5G");
-        product.setPrice(BigDecimal.valueOf(2001));
         pmsProductRepository.save(product);
-        List<PmsProduct> afterList = pmsProductRepository.findAll();
-        Assert.assertEquals(30,afterList.size());
+        Assert.assertEquals(30,pmsProductRepository.count());
     }
 
     @Test

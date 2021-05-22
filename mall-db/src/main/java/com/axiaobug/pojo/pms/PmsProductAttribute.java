@@ -104,5 +104,7 @@ public class PmsProductAttribute implements Serializable {
 			updatable = false)
 	private PmsProductAttributeCategory pmsProductAttributeCategory;
 
+   	@OneToMany(mappedBy = "pmsProductAttribute")
+	private List<PmsProductAttributeValue> productAttributeValues = new ArrayList<>();
 
 }

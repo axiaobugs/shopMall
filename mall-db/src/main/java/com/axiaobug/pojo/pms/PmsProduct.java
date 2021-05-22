@@ -37,13 +37,13 @@ public class PmsProduct implements Serializable {
    	@Column(name = "product_attribute_category_id" )
 	private Integer productAttributeCategoryId = null;
 
-	private String name = null;
+	private String name = "";
 
 	private String pic = null;
 
 	/**货号*/
    	@Column(name = "product_sn" )
-	private String productSerialNumber = null;
+	private String productSerialNumber = "";
 
 	/**
 	 * 0: no 1: deleted
@@ -317,5 +317,8 @@ public class PmsProduct implements Serializable {
 
 
    	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.PERSIST)
-	private List<PmsProductOperateLog> productOperateLogs;
+	private List<PmsProductOperateLog> productOperateLogs = new ArrayList<>();
+
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.PERSIST)
+	private List<PmsProductAttributeValue> productAttributeValues = new ArrayList<>();
 }
