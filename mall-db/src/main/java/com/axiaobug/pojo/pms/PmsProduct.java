@@ -316,4 +316,6 @@ public class PmsProduct implements Serializable {
    	private PmsComment comments;
 
 
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.PERSIST)
+	private List<PmsProductOperateLog> productOperateLogs;
 }
