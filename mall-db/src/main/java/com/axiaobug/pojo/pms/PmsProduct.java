@@ -26,24 +26,24 @@ public class PmsProduct implements Serializable {
 	private Integer id;
 
    	@Column(name = "brand_id" )
-	private Integer brandId = 0;
+	private Integer brandId = null;
 
    	@Column(name = "product_category_id" )
-	private Integer productCategoryId = 0;
+	private Integer productCategoryId = null;
 
    	@Column(name = "feight_template_id" )
-	private Integer feightTemplateId = 0;
+	private Integer feightTemplateId = null;
 
    	@Column(name = "product_attribute_category_id" )
-	private Integer productAttributeCategoryId = 0;
+	private Integer productAttributeCategoryId = null;
 
-	private String name = "";
+	private String name = null;
 
-	private String pic = "";
+	private String pic = null;
 
 	/**货号*/
    	@Column(name = "product_sn" )
-	private String productSerialNumber = "";
+	private String productSerialNumber = null;
 
 	/**
 	 * 0: no 1: deleted
@@ -81,7 +81,7 @@ public class PmsProduct implements Serializable {
 	private Integer verifyStatus = 0;
 
 	/**排序*/
-	private Integer sort;
+	private Integer sort = null;
 
 	/**
 	 * Sale num
@@ -122,10 +122,10 @@ public class PmsProduct implements Serializable {
 	private Integer usePointLimit = 0;
 
    	@Column(name = "sub_title" )
-	private String subtitle = "";
+	private String subtitle = null;
 
    	@Column(name = "description" )
-	private String description = "";
+	private String description = null;
 
 	/**
 	 * market price which for calculate the discount
@@ -148,7 +148,7 @@ public class PmsProduct implements Serializable {
 	 *
 	 * 单位
 	 * */
-	private String unit = "";
+	private String unit = null;
 
 	/**
 	 * weight (gram)
@@ -170,34 +170,34 @@ public class PmsProduct implements Serializable {
 	 * 以逗号分割的产品服务：1->无忧退货；2->快速退款；3->免费包邮
 	 * */
    	@Column(name = "service_ids" )
-	private String serviceIds = "";
+	private String serviceIds = null;
 
-	private String keywords = "";
+	private String keywords = null;
 
-	private String note = "";
+	private String note = null;
 
 	/**
 	 * limit 5 pic address = "add1,add2,add3,...."
 	 * 画册图片，连产品图片限制为5张，以逗号分割
 	 * */
    	@Column(name = "album_pics" )
-	private String albumPics = "";
+	private String albumPics = null;
 
    	@Column(name = "detail_title" )
-	private String detailTitle = "";
+	private String detailTitle = null;
 
    	@Column(name = "detail_desc" )
-	private String detailDescription = "";
+	private String detailDescription = null;
 
    	@Column(name = "detail_html" )
-	private String detailHtml = "";
+	private String detailHtml = null;
 
 	/**
 	 * mobile html
 	 * 移动端网页详情
 	 * */
    	@Column(name = "detail_mobile_html" )
-	private String detailMobileHtml = "";
+	private String detailMobileHtml = null;
 
 	/**
 	 * promotion start time
@@ -227,13 +227,13 @@ public class PmsProduct implements Serializable {
 	private Integer promotionType = 0;
 
    	@Column(name = "brand_name" )
-	private String brandName = "";
+	private String brandName = null;
 
 	/**
 	 * 商品分类名称
 	 * */
    	@Column(name = "product_category_name" )
-	private String productCategoryName = "";
+	private String productCategoryName = null;
 
 	@Override
 	public String toString() {
@@ -311,6 +311,9 @@ public class PmsProduct implements Serializable {
 			insertable = false,
 			updatable = false)
 	private PmsProductCategory pmsProductCategory;
+
+   	@OneToOne
+   	private PmsComment comments;
 
 
 }

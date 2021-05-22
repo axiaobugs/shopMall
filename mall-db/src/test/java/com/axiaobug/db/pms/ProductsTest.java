@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -87,7 +88,5 @@ public class ProductsTest {
         List<PmsProductLadder> ladders = pmsProductLadderRepository.findAll();
         Assert.assertEquals(27,ladders.size());
     }
-
-
 
 }

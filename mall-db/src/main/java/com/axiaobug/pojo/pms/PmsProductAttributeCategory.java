@@ -24,7 +24,7 @@ public class PmsProductAttributeCategory implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	private String name = "";
+	private String name = null;
 
 
    	@Column(name = "attribute_count" )

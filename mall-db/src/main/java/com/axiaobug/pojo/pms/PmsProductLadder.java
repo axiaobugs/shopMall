@@ -25,7 +25,7 @@ public class PmsProductLadder implements Serializable {
 	private Integer id;
 
    	@Column(name = "product_id" )
-	private Integer productId = 0;
+	private Integer productId = null;
 
 	/**
 	 * limit of products

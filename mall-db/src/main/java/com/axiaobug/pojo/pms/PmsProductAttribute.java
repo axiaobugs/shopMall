@@ -2,6 +2,9 @@ package com.axiaobug.pojo.pms;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.*;
 
 /**
@@ -23,9 +26,9 @@ public class PmsProductAttribute implements Serializable {
 	private Integer id;
 
    	@Column(name = "product_attribute_category_id" )
-	private Integer productAttributeCategoryId = 0;
+	private Integer productAttributeCategoryId = null;
 
-	private String name = "";
+	private String name = null;
 
 	/**
 	 * 0: unique 1: single 2: multiple
@@ -97,12 +100,9 @@ public class PmsProductAttribute implements Serializable {
 
    	@ManyToOne
 	@JoinColumn(name = "product_attribute_category_id",
-			referencedColumnName = "id",
 			insertable = false,
 			updatable = false)
 	private PmsProductAttributeCategory pmsProductAttributeCategory;
-
-
 
 
 }

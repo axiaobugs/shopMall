@@ -27,14 +27,14 @@ public class PmsBrand implements Serializable {
 	private Integer id;
 
    	@Column(name = "name")
-	private String name = "";
+	private String name = null;
 
 	/**
 	 * Initials
 	 * 首字母
 	 * */
    	@Column(name = "first_letter" )
-	private String firstLetter = "";
+	private String firstLetter = null;
 
    	@Column(name = "sort" )
 	private Integer sort = 0;
@@ -71,7 +71,7 @@ public class PmsBrand implements Serializable {
 	 * 品牌logo
 	 * */
    	@Column(name = "logo" )
-	private String logo = "";
+	private String logo = null;
 
 	/**
 	 * Big logo or display pic address
@@ -85,7 +85,7 @@ public class PmsBrand implements Serializable {
 	 * 品牌故事
 	 * */
    	@Column(name = "brand_story" )
-	private String brandStory = "";
+	private String brandStory = null;
 /** *************************************************************************/
 
    	@OneToMany(mappedBy = "pmsBrand",cascade = CascadeType.PERSIST)

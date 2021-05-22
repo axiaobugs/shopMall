@@ -24,7 +24,7 @@ public class PmsFeightTemplate implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	private String name = "";
+	private String name = null;
 
 	/**
 	 * shipping fee charge by:
@@ -58,7 +58,7 @@ public class PmsFeightTemplate implements Serializable {
 	 * destination
 	 * 目的地（省、市）
 	 * */
-	private String dest = "";
+	private String dest = null;
 
 
 

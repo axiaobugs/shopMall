@@ -29,7 +29,7 @@ public class PmsProductCategory implements Serializable {
 	 * 上机分类的编号：0表示一级分类
 	 * */
    	@Column(name = "parent_id" )
-	private Integer parentId = 0;
+	private Integer parentId = null;
 
 	private String name = null;
 
