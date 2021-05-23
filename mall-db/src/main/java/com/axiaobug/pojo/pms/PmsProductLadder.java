@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * @Author: Yanxiao Fang
  * @Date: 2021/05/22 09:18
+ * TODO: 没有和product关联,需要添加关联为 @ManyToOne
  */
 @Data
 @Entity

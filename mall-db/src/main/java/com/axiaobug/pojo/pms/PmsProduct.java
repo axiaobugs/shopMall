@@ -3,6 +3,9 @@ package com.axiaobug.pojo.pms;
 import javax.persistence.*;
 import java.io.Serializable;
 import lombok.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -291,7 +294,8 @@ public class PmsProduct implements Serializable {
 			updatable = false)
 	private PmsBrand pmsBrand;
 
-   	@ManyToOne
+   	@ManyToOne(fetch = FetchType.LAZY,optional = true)
+	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "feight_template_id",
 			referencedColumnName = "id",
 			insertable = false,
@@ -316,9 +320,13 @@ public class PmsProduct implements Serializable {
    	private PmsComment comments;
 
 
-   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.PERSIST)
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
 	private List<PmsProductOperateLog> productOperateLogs = new ArrayList<>();
 
-   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.PERSIST)
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
 	private List<PmsProductAttributeValue> productAttributeValues = new ArrayList<>();
+
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+	private List<PmsSkuStock> skuStocks = new ArrayList<>();
+
 }

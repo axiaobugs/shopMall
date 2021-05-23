@@ -32,27 +32,27 @@ public class PmsFeightTemplate implements Serializable {
 	 * 计费类型:0->按重量；1->按件数
 	 * */
    	@Column(name = "charge_type" )
-	private Integer chargeType = 1;
+	private Integer chargeType = null;
 
 	/**
 	 * first weight
 	 * 首重kg
 	 * */
    	@Column(name = "first_weight" )
-	private BigDecimal firstWeight = BigDecimal.valueOf(1);
+	private BigDecimal firstWeight = null;
 
 	/**
 	 * first fee
 	 * 首费（元）
 	 * */
    	@Column(name = "first_fee" )
-	private BigDecimal firstFee = BigDecimal.valueOf(75);
+	private BigDecimal firstFee = null;
 
    	@Column(name = "continue_weight" )
-	private BigDecimal continueWeight = BigDecimal.valueOf(0);
+	private BigDecimal continueWeight = null;
 
    	@Column(name = "continme_fee" )
-	private BigDecimal continueFee = BigDecimal.valueOf(0);
+	private BigDecimal continueFee = null;
 
 	/**
 	 * destination
@@ -62,7 +62,7 @@ public class PmsFeightTemplate implements Serializable {
 
 
 
-   	@OneToMany(mappedBy = "pmsFeightTemplate",cascade = CascadeType.PERSIST)
+   	@OneToMany(mappedBy = "pmsFeightTemplate",cascade = CascadeType.REFRESH)
    	private List<PmsProduct> products = new ArrayList<>();
 
 
