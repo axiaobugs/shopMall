@@ -4,12 +4,16 @@ import com.axiaobug.pojo.pms.PmsAlbum;
 import com.axiaobug.pojo.pms.PmsAlbumPic;
 import com.axiaobug.repository.pms.PmsAlbumPicRepository;
 import com.axiaobug.repository.pms.PmsAlbumRepository;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Yanxiao
@@ -33,9 +37,16 @@ public class AlbumTest {
         album.setName("测试一");
         album.setPicCount(3);
         pmsAlbumRepository.save(album);
-        PmsAlbumPic albumPic = new PmsAlbumPic();
-        albumPic.setAlbumId(1);
-        pmsAlbumPicRepository.save(albumPic);
+        if (pmsAlbumRepository.count()==1){
+            List<PmsAlbum> albums = pmsAlbumRepository.findAll();
+            for (PmsAlbum albumEach:albums) {
+                Integer id = albumEach.getId();
+                PmsAlbumPic albumPic = new PmsAlbumPic();
+                albumPic.setAlbumId(id);
+                pmsAlbumPicRepository.save(albumPic);
+            }
+            System.out.println(pmsAlbumPicRepository.count());
+        }
     }
 
 }

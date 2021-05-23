@@ -3,6 +3,8 @@ package com.axiaobug.pojo.pms;
 import javax.persistence.*;
 import java.io.Serializable;
 import lombok.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 /**
  * @Author: Yanxiao Fang

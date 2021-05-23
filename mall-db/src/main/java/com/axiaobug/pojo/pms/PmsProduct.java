@@ -302,7 +302,8 @@ public class PmsProduct implements Serializable {
 			updatable = false)
 	private PmsFeightTemplate pmsFeightTemplate;
 
-   	@ManyToOne
+   	@ManyToOne(fetch = FetchType.LAZY,optional = true)
+	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "product_attribute_category_id",
 			referencedColumnName = "id",
 			insertable = false,
@@ -328,5 +329,11 @@ public class PmsProduct implements Serializable {
 
    	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
 	private List<PmsSkuStock> skuStocks = new ArrayList<>();
+
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+	private List<PmsProductFullReduction> productFullReductions = new ArrayList<>();
+
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+	private List<PmsProductVertifyRecord> productVertifyRecords = new ArrayList<>();
 
 }
