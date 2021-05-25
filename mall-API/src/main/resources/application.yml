@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: mall-API
+  profiles:
+    active: dev #默认为开发环境
+  servlet:
+    multipart:
+      enabled: true #开启文件上传
+      max-file-size: 10MB #限制文件上传大小为10M
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头 JWT storage of Header
+  secret: mall-admin-secret #JWT加解密使用的密钥 secret-key
+  expiration: 604800 #JWT的超期限时间(60*60*24*7) one week
+  tokenHead: 'Bearer '  #JWT负载中拿到开头 Get from the payload of header
+
+secure:
+  ignored:
+    urls: #安全路径白名单
+      - /swagger-ui.html
+      - /swagger-resources/**
+      - /swagger/**
+      - /**/v2/api-docs
+      - /**/*.js
+      - /**/*.css
+      - /**/*.png
+      - /**/*.ico
+      - /webjars/springfox-swagger-ui/**
+      - /actuator/**
+      - /druid/**
+      - /admin/login
+      - /admin/register
+      - /admin/info
+      - /admin/logout
+      - /minio/upload
+server:
+  port: 8001
