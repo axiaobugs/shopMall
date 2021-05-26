@@ -2,6 +2,8 @@ package com.axiaobug.pojo.cms;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -115,12 +117,15 @@ public class CmsSubject implements Serializable {
 
 
 	@OneToMany(mappedBy = "cmsSubject")
-	private List<CmsSubjectProductRelation> subjectProductRelations = new ArrayList<>();
+	@JsonIgnore
+	private List<CmsSubjectProductRelation> subjectProductRelations;
 
 	@OneToMany(mappedBy = "cmsSubject")
-	private List<CmsSubjectComment> cmsSubjectComments = new ArrayList<>();
+	@JsonIgnore
+	private List<CmsSubjectComment> cmsSubjectComments;
 
 	@ManyToOne
 	@JoinColumn(name = "category_id",insertable = false,updatable = false)
+	@JsonIgnore
 	private CmsSubjectCategory cmsSubjectCategory;
 }

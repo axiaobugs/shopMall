@@ -2,6 +2,8 @@ package com.axiaobug.pojo.cms;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,5 +59,6 @@ public class CmsPrefrenceArea implements Serializable {
 	/********************************************************************/
 
 	@OneToMany(mappedBy = "cmsPrefrenceArea")
+	@JsonIgnore
 	private List<CmsPrefrenceAreaProductRelation> productRelationList = new ArrayList<>();
 }
