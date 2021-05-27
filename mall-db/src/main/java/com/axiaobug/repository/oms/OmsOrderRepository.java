@@ -9,5 +9,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @version 0.1.0
  * @date 05 2021
  */
-public interface OmsOrderRepository extends JpaRepository<OmsOrder,Integer>, JpaSpecificationExecutor<OmsOrder> {
+public interface OmsOrderRepository
+        extends JpaRepository<OmsOrder,Integer>,
+        JpaSpecificationExecutor<OmsOrder> {
+
+
 }

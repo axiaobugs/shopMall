@@ -2,6 +2,8 @@ package com.axiaobug.pojo.oms;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -346,11 +348,14 @@ public class OmsOrder implements Serializable {
 	/***********************************************/
 
 	@OneToMany(mappedBy = "omsOrder")
+	@JsonIgnore
 	private List<OmsOrderItem> orderItems = new ArrayList<>();
 
 	@OneToMany(mappedBy = "omsOrder")
+	@JsonIgnore
 	private List<OmsOrderOperateHistory> orderOperateHistories = new ArrayList<>();
 
 	@OneToMany(mappedBy = "omsOrder")
+	@JsonIgnore
 	private List<OmsOrderReturnApply> omsOrderReturnApplies = new ArrayList<>();
 }

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * @Discription: 商品优选管理Controller
+ * product Preferred controller
  * @author Yanxiao
  * @version 0.1.0
  * @date 05 2021

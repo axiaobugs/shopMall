@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * @Discription: 商品专题管理Controller
+ * Commodity subject controller
  * @author Yanxiao
  * @version 0.1.0
  * @date 05 2021
