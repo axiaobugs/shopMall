@@ -21,4 +21,11 @@ public interface OmsOrderService {
     */
     Specification<OmsOrder> orderQueryParam(OmsOrderQueryParam queryParam);
 
+    /**
+    * @Discription: close order in bulk
+    * @Param:  ids, note
+    * @return: num of size of close in this session
+    */
+    @Transactional(rollbackFor = Exception.class)
+    int close(List<Integer> ids, String note);
 }

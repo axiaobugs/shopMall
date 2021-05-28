@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 /**
@@ -65,8 +64,19 @@ public class OmsOrderController {
     @PostMapping(value = "/update/delivery")
     public CommonResult<?> delivery(@RequestBody List<OmsOrderDeliveryParam> deliveryParamList) {
         int size = this.omsOrderDeliveryService.delivery(deliveryParamList);
-        if (size > 0){
+        if (size > 0 && size == deliveryParamList.size() ){
             return CommonResult.success(size);
+        }
+        return CommonResult.failed();
+    }
+
+    @ApiOperation("批量关闭订单")
+    @PostMapping(value = "/update/close")
+    @ResponseBody
+    public CommonResult<?> close(@RequestParam(name = "ids") List<Integer> ids, @RequestParam("note") String note) {
+        int count = orderService.close(ids, note);
+        if (count > 0) {
+            return CommonResult.success(count);
         }
         return CommonResult.failed();
     }

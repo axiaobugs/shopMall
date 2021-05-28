@@ -1,36 +1,22 @@
 package com.axiaobug.oms;
 
-
-
-import antlr.build.Tool;
 import com.axiaobug.MallApiApplication;
-import com.axiaobug.common.CommonResult;
-import com.axiaobug.controller.OmsOrderController;
 import com.axiaobug.dto.OmsOrderDeliveryParam;
 import com.axiaobug.dto.OmsOrderQueryParam;
-import com.fasterxml.jackson.core.json.UTF8DataInputJsonParser;
-import com.fasterxml.jackson.core.json.UTF8JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +30,6 @@ import java.util.List;
 @Transactional
 public class OrderDeliveryTest {
 
-    @Autowired
-    protected OmsOrderController omsOrderController;
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
@@ -88,6 +72,7 @@ public class OrderDeliveryTest {
 
     }
 
+    @DisplayName("按条件查询所有订单(分页)")
     @Test
     public void listTest() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();

@@ -3,6 +3,7 @@ package com.axiaobug.service.impl;
 import cn.hutool.core.date.DateUtil;
 import com.axiaobug.dto.OmsOrderQueryParam;
 import com.axiaobug.pojo.oms.OmsOrder;
+import com.axiaobug.pojo.oms.OmsOrderOperateHistory;
 import com.axiaobug.repository.oms.OmsOrderOperateHistoryRepository;
 import com.axiaobug.repository.oms.OmsOrderRepository;
 import com.axiaobug.service.OmsOrderService;
@@ -13,6 +14,7 @@ import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Yanxiao
@@ -21,6 +23,16 @@ import java.util.List;
  */
 @Service
 public class OmsOrderServiceImpl implements OmsOrderService {
+
+    private final OmsOrderRepository omsOrderRepository;
+    private final OmsOrderOperateHistoryRepository omsOrderOperateHistoryRepository;
+
+    @Autowired
+    public OmsOrderServiceImpl(OmsOrderRepository omsOrderRepository,
+                               OmsOrderOperateHistoryRepository omsOrderOperateHistoryRepository) {
+        this.omsOrderRepository = omsOrderRepository;
+        this.omsOrderOperateHistoryRepository = omsOrderOperateHistoryRepository;
+    }
 
     @Override
     public Specification<OmsOrder> orderQueryParam(OmsOrderQueryParam queryParam) {
@@ -56,4 +68,38 @@ public class OmsOrderServiceImpl implements OmsOrderService {
     }
 
 
+    /**
+    * @Discription:
+    * @Param: ids, note
+    * @return:
+    * TODO: could add OperateMan as other param
+    */
+    @Override
+    public int close(List<Integer> ids, String note) {
+        AtomicInteger i= new AtomicInteger();
+
+        ids.forEach(id -> {
+            OmsOrderOperateHistory history = new OmsOrderOperateHistory();
+            Date time = new Date();
+            history.setOrderId(id);
+            history.setOperateMan("Admin");
+            history.setOrderStatus(2);
+            history.setNote("close order"+note);
+            history.setCreateTime(time);
+
+            OmsOrder order = omsOrderRepository.findById(id).get();
+            order.setStatus(4);
+            order.setDeliveryTime(time);
+            try {
+                this.omsOrderRepository.save(order);
+                this.omsOrderOperateHistoryRepository.save(history);
+                i.getAndIncrement();
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+        });
+        return i.incrementAndGet();
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Yanxiao
@@ -30,11 +31,13 @@ public class OmsOrderDeliveryServiceImpl implements OmsOrderDeliveryService {
     }
     /**
      * @Param: [deliveryParamList]
+     * @return:
+     * TODO: OperateMan,OrderStatus,Note添加到参数里面
      */
     @Override
     public int delivery(List<OmsOrderDeliveryParam> deliveryParamList) {
 
-        int size = deliveryParamList.size();
+        AtomicInteger i= new AtomicInteger();
 
         deliveryParamList.forEach(omsOrderDeliveryParam -> {
             OmsOrderOperateHistory history = new OmsOrderOperateHistory();
@@ -53,12 +56,14 @@ public class OmsOrderDeliveryServiceImpl implements OmsOrderDeliveryService {
             try {
                 this.omsOrderRepository.save(order);
                 this.omsOrderOperateHistoryRepository.save(history);
+                i.getAndIncrement();
             } catch (Exception e) {
                 e.printStackTrace();
 
             }
+
         });
-        return size;
+        return i.incrementAndGet();
     }
 
 
