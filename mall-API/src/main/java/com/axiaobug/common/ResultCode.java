@@ -9,7 +9,7 @@ package com.axiaobug.common;
 
 public enum ResultCode implements IErrorCode{
     // SUCCESS
-    SUCCESS(200, "操作成功"),
+    SUCCESS(200, "SUCCESS"),
     // FAILED
     FAILED(500, "操作失败"),
     // VALIDATE_FAILED

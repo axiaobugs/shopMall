@@ -4,16 +4,13 @@ import com.axiaobug.pojo.pms.PmsAlbum;
 import com.axiaobug.pojo.pms.PmsAlbumPic;
 import com.axiaobug.repository.pms.PmsAlbumPicRepository;
 import com.axiaobug.repository.pms.PmsAlbumRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.Optional;
+
 
 /**
  * @author Yanxiao
@@ -21,7 +18,6 @@ import java.util.Optional;
  * @date 05 2021
  */
 @SpringBootTest
-@RunWith(SpringRunner.class)
 @Transactional
 public class AlbumTest {
 
