@@ -27,7 +27,6 @@ import java.util.List;
 @RequestMapping("/order")
 public class OmsOrderController {
 
-    /**/
     private final OmsOrderRepository omsOrderRepository;
     private final OmsOrderServiceImpl orderService;
     private final OmsOrderDeliveryServiceImpl omsOrderDeliveryService;
@@ -75,6 +74,17 @@ public class OmsOrderController {
     @ResponseBody
     public CommonResult<?> close(@RequestParam(name = "ids") List<Integer> ids, @RequestParam("note") String note) {
         int count = orderService.close(ids, note);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }
+
+    @ApiOperation("批量删除订单")
+    @PostMapping(value = "/delete")
+    @ResponseBody
+    public CommonResult<?> delete(@RequestParam("ids") List<Integer> ids) {
+        int count = orderService.delete(ids);
         if (count > 0) {
             return CommonResult.success(count);
         }

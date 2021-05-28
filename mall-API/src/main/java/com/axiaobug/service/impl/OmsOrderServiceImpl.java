@@ -34,6 +34,34 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         this.omsOrderOperateHistoryRepository = omsOrderOperateHistoryRepository;
     }
 
+    public OmsOrderOperateHistory createHistory(int id,String status,String note,String name,Date time){
+        OmsOrderOperateHistory history = new OmsOrderOperateHistory();
+        history.setOrderId(id);
+        history.setOperateMan(name);
+        if ("close".equals(status)){
+            history.setOrderStatus(4);
+            history.setNote("close order"+note);
+        }else if("delete".equals(status)) {
+            history.setOrderStatus(5);
+            history.setNote("delete order"+note);
+        }
+        history.setCreateTime(time);
+        return history;
+    }
+
+    public OmsOrder createOrderObject(int id,String status,Date time){
+        OmsOrder order = omsOrderRepository.findById(id).get();
+        if ("close".equals(status)){
+            order.setStatus(4);
+        }else if("delete".equals(status)){
+            order.setStatus(5);
+            order.setDeleteStatus(1);
+        }
+        order.setDeliveryTime(time);
+        return order;
+    }
+
+
     @Override
     public Specification<OmsOrder> orderQueryParam(OmsOrderQueryParam queryParam) {
         return (root, criteriaQuery, criteriaBuilder) -> {
@@ -73,30 +101,43 @@ public class OmsOrderServiceImpl implements OmsOrderService {
     * @Param: ids, note
     * @return:
     * TODO: could add OperateMan as other param
+    * TODO: Extract a function which could Encapsulate OmsOrderOperateHistory
     */
     @Override
     public int close(List<Integer> ids, String note) {
         AtomicInteger i= new AtomicInteger();
+        Date time = new Date();
 
         ids.forEach(id -> {
-            OmsOrderOperateHistory history = new OmsOrderOperateHistory();
-            Date time = new Date();
-            history.setOrderId(id);
-            history.setOperateMan("Admin");
-            history.setOrderStatus(2);
-            history.setNote("close order"+note);
-            history.setCreateTime(time);
-
-            OmsOrder order = omsOrderRepository.findById(id).get();
-            order.setStatus(4);
-            order.setDeliveryTime(time);
+            OmsOrderOperateHistory history =createHistory(id,"close","关闭订单","Admin",time);
+            OmsOrder order = createOrderObject(id,"close",time);
             try {
                 this.omsOrderRepository.save(order);
                 this.omsOrderOperateHistoryRepository.save(history);
                 i.getAndIncrement();
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        });
+        return i.incrementAndGet();
+    }
 
+    @Override
+    public int delete(List<Integer> ids) {
+
+        AtomicInteger i= new AtomicInteger();
+        Date time = new Date();
+
+        ids.forEach(id -> {
+            OmsOrderOperateHistory history = createHistory(id,"delete","删除订单","Admin",time);
+
+            OmsOrder order = createOrderObject(id,"delete",time);
+            try {
+                this.omsOrderRepository.save(order);
+                this.omsOrderOperateHistoryRepository.save(history);
+                i.getAndIncrement();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         });

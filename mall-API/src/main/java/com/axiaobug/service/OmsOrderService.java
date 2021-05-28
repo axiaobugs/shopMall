@@ -28,4 +28,11 @@ public interface OmsOrderService {
     */
     @Transactional(rollbackFor = Exception.class)
     int close(List<Integer> ids, String note);
+
+    /**
+    * @Discription: delete order in bulk
+    * @Param: ids
+    * @return: num of size of close in this session
+    */
+    int delete(List<Integer> ids);
 }
