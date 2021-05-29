@@ -1,6 +1,8 @@
 package com.axiaobug.oms;
 
 import com.axiaobug.MallApiApplication;
+import com.axiaobug.pojo.oms.OmsOrder;
+import com.axiaobug.repository.oms.OmsOrderRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +17,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Optional;
+
 /**
  * @author Yanxiao
  * @version 0.1.0
@@ -26,6 +30,9 @@ public class OrderTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    private OmsOrderRepository omsOrderRepository;
     private MockMvc mockMvc;
 
 
@@ -44,6 +51,22 @@ public class OrderTest {
                 .param("note",note)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
+        Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
+    }
+
+    @DisplayName("批量删除订单")
+    @Test
+    public void orderDeleteTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .delete("/order/delete")
+                .param("ids", "12,13,14")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        if (omsOrderRepository.findById(12).isPresent()){
+            OmsOrder order = omsOrderRepository.findById(12).get();
+            Assertions.assertEquals(1,order.getDeleteStatus());
+        }
         Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
     }
 
