@@ -1,6 +1,7 @@
 package com.axiaobug.service;
 
 import com.axiaobug.dto.OmsOrderDeliveryParam;
+import com.axiaobug.dto.OmsOrderDetail;
 import com.axiaobug.dto.OmsOrderQueryParam;
 import com.axiaobug.pojo.oms.OmsOrder;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,4 +36,11 @@ public interface OmsOrderService {
     * @return: num of size of close in this session
     */
     int delete(List<Integer> ids);
+
+    /**
+     * 获取指定订单详情
+     */
+    OmsOrderDetail detail(Integer id);
+
+
 }

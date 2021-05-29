@@ -2,6 +2,7 @@ package com.axiaobug.controller;
 
 import com.axiaobug.common.CommonResult;
 import com.axiaobug.dto.OmsOrderDeliveryParam;
+import com.axiaobug.dto.OmsOrderDetail;
 import com.axiaobug.dto.OmsOrderQueryParam;
 import com.axiaobug.pojo.oms.OmsOrder;
 import com.axiaobug.repository.oms.OmsOrderRepository;
@@ -89,5 +90,13 @@ public class OmsOrderController {
             return CommonResult.success(count);
         }
         return CommonResult.failed();
+    }
+
+    @ApiOperation("获取订单详情：订单信息、商品信息、操作记录")
+    @GetMapping(value = "/{id}")
+    @ResponseBody
+    public CommonResult<OmsOrderDetail> detail(@PathVariable Integer id) {
+        OmsOrderDetail orderDetailResult = orderService.detail(id);
+        return CommonResult.success(orderDetailResult);
     }
 }

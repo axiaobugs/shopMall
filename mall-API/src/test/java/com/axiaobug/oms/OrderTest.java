@@ -1,8 +1,6 @@
 package com.axiaobug.oms;
 
-import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
-import com.axiaobug.controller.OmsOrderController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +14,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.ArrayList;
 
 /**
  * @author Yanxiao
@@ -51,4 +47,14 @@ public class OrderTest {
         Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
     }
 
+    @DisplayName("获取指定订单详情")
+    @Test
+    public void orderDetailTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/order/12")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+        Assertions.assertEquals(200, mvcResult.getResponse().getStatus());
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
 }

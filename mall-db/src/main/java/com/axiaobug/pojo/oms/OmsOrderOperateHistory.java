@@ -73,10 +73,10 @@ public class OmsOrderOperateHistory implements Serializable {
     }
 
     /**************************************************************/
-
-    @ManyToOne
-    @JoinColumn(name = "order_id",insertable = false,updatable = false)
-    private OmsOrder omsOrder;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "order_id",insertable = false,updatable = false)
+//    private OmsOrder omsOrder;
 
 
 }

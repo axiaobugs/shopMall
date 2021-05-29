@@ -347,15 +347,15 @@ public class OmsOrder implements Serializable {
 
 	/***********************************************/
 
-	@OneToMany(mappedBy = "omsOrder")
-	@JsonIgnore
-	private List<OmsOrderItem> orderItems = new ArrayList<>();
-
-	@OneToMany(mappedBy = "omsOrder")
-	@JsonIgnore
-	private List<OmsOrderOperateHistory> orderOperateHistories = new ArrayList<>();
-
-	@OneToMany(mappedBy = "omsOrder")
-	@JsonIgnore
-	private List<OmsOrderReturnApply> omsOrderReturnApplies = new ArrayList<>();
+//	@OneToMany(mappedBy = "omsOrder")
+//	@JsonIgnore
+//	private List<OmsOrderItem> orderItems = new ArrayList<>();
+//
+//	@OneToMany(mappedBy = "omsOrder")
+//	@JsonIgnore
+//	private List<OmsOrderOperateHistory> orderOperateHistories = new ArrayList<>();
+//
+//	@OneToMany(mappedBy = "omsOrder")
+//	@JsonIgnore
+//	private List<OmsOrderReturnApply> omsOrderReturnApplies = new ArrayList<>();
 }

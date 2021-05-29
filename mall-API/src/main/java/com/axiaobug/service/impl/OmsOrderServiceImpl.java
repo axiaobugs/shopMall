@@ -1,9 +1,12 @@
 package com.axiaobug.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import com.axiaobug.dto.OmsOrderDetail;
 import com.axiaobug.dto.OmsOrderQueryParam;
 import com.axiaobug.pojo.oms.OmsOrder;
+import com.axiaobug.pojo.oms.OmsOrderItem;
 import com.axiaobug.pojo.oms.OmsOrderOperateHistory;
+import com.axiaobug.repository.oms.OmsOrderItemsRepository;
 import com.axiaobug.repository.oms.OmsOrderOperateHistoryRepository;
 import com.axiaobug.repository.oms.OmsOrderRepository;
 import com.axiaobug.service.OmsOrderService;
@@ -11,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -26,13 +27,17 @@ public class OmsOrderServiceImpl implements OmsOrderService {
 
     private final OmsOrderRepository omsOrderRepository;
     private final OmsOrderOperateHistoryRepository omsOrderOperateHistoryRepository;
+    private final OmsOrderItemsRepository omsOrderItemsRepository;
 
     @Autowired
     public OmsOrderServiceImpl(OmsOrderRepository omsOrderRepository,
-                               OmsOrderOperateHistoryRepository omsOrderOperateHistoryRepository) {
+                               OmsOrderOperateHistoryRepository omsOrderOperateHistoryRepository,
+                               OmsOrderItemsRepository omsOrderItemsRepository) {
         this.omsOrderRepository = omsOrderRepository;
         this.omsOrderOperateHistoryRepository = omsOrderOperateHistoryRepository;
+        this.omsOrderItemsRepository = omsOrderItemsRepository;
     }
+
 
     public OmsOrderOperateHistory createHistory(int id,String status,String note,String name,Date time){
         OmsOrderOperateHistory history = new OmsOrderOperateHistory();
@@ -101,7 +106,6 @@ public class OmsOrderServiceImpl implements OmsOrderService {
     * @Param: ids, note
     * @return:
     * TODO: could add OperateMan as other param
-    * TODO: Extract a function which could Encapsulate OmsOrderOperateHistory
     */
     @Override
     public int close(List<Integer> ids, String note) {
@@ -142,5 +146,13 @@ public class OmsOrderServiceImpl implements OmsOrderService {
 
         });
         return i.incrementAndGet();
+    }
+
+    @Override
+    public OmsOrderDetail detail(Integer id) {
+        List<OmsOrderItem> orderItems = omsOrderItemsRepository.findByOrderId(id);
+        List<OmsOrderOperateHistory> operateHistories = omsOrderOperateHistoryRepository.findAllById(Collections.singleton(id));
+        OmsOrder omsOrder = omsOrderRepository.findById(id).orElse(null);
+        return new OmsOrderDetail(omsOrder,orderItems,operateHistories);
     }
 }
