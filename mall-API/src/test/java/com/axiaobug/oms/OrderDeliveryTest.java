@@ -87,6 +87,7 @@ public class OrderDeliveryTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(queryParam))).andReturn();
 
+
         Assertions.assertEquals(200,result.getResponse().getStatus());
     }
 }

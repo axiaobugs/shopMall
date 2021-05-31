@@ -1,7 +1,7 @@
 package com.axiaobug.oms;
 
 import com.axiaobug.MallApiApplication;
-import com.axiaobug.dto.OmsOrderDeliveryParam;
+import com.axiaobug.dto.OmsMoneyInfoParam;
 import com.axiaobug.dto.OmsReceiverInfoParam;
 import com.axiaobug.pojo.oms.OmsOrder;
 import com.axiaobug.repository.oms.OmsOrderRepository;
@@ -19,9 +19,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import java.math.BigDecimal;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Yanxiao
@@ -92,7 +91,7 @@ public class OrderTest {
 
     @DisplayName("修改收货人信息")
     @Test
-    public void deliveryTest() throws Exception {
+    public void editReceiverTest() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         OmsReceiverInfoParam receiverInfoParam = new OmsReceiverInfoParam();
         receiverInfoParam.setOrderId(12);
@@ -108,7 +107,44 @@ public class OrderTest {
         OmsOrder order = omsOrderRepository.findById(12).get();
         Assertions.assertEquals("方言啸",order.getReceiverName());
         Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
 
+    @DisplayName("修改订单费用信息")
+    @Test
+    public void editFeeTest() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        OmsMoneyInfoParam moneyInfoParam = new OmsMoneyInfoParam();
+        moneyInfoParam.setOrderId(14);
+        moneyInfoParam.setFreightAmount(BigDecimal.valueOf(808080));
+        String requestBody = objectMapper.writeValueAsString(moneyInfoParam);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .patch("/order/update/moneyInfo")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andReturn();
+        OmsOrder order = omsOrderRepository.findById(14).get();
+        Assertions.assertEquals(BigDecimal.valueOf(808080),
+                                order.getFreightAmount());
+        Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+
+    @DisplayName("修改订单备注")
+    @Test
+    public void editNoteTest() throws Exception {
+        String note = "Customer close order";
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .patch("/order/update/note")
+                .param("id","13")
+                .param("note",note)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        OmsOrder order = omsOrderRepository.findById(13).get();
+        Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
+        Assertions.assertEquals(note,order.getNote());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.axiaobug.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import com.axiaobug.dto.OmsMoneyInfoParam;
 import com.axiaobug.dto.OmsOrderDetail;
 import com.axiaobug.dto.OmsOrderQueryParam;
 import com.axiaobug.dto.OmsReceiverInfoParam;
@@ -203,6 +204,67 @@ public class OmsOrderServiceImpl implements OmsOrderService {
             }
         }
         throw new Exception("request param have wrong format or wrong");
+    }
 
+
+    @Override
+    public boolean updateMoneyInfo(OmsMoneyInfoParam moneyInfoParam) throws Exception {
+        if (omsOrderRepository.findById(moneyInfoParam.getOrderId()).isPresent()){
+            OmsOrder order = omsOrderRepository.findById(moneyInfoParam.getOrderId()).get();
+            OmsOrderOperateHistory history = new OmsOrderOperateHistory();
+            history.setOrderId(moneyInfoParam.getOrderId());
+            if (moneyInfoParam.getFreightAmount()!=null){
+                order.setFreightAmount(moneyInfoParam.getFreightAmount());
+            }
+            if (moneyInfoParam.getDiscountAmount()!=null){
+                order.setDiscountAmount(moneyInfoParam.getDiscountAmount());
+            }
+            if (moneyInfoParam.getStatus()!=null){
+                order.setStatus(moneyInfoParam.getStatus());
+                history.setOrderStatus(moneyInfoParam.getStatus());
+            }
+            history.setCreateTime(new Date());
+            history.setNote("修改订单费用信息");
+            history.setOperateMan("Admin");
+
+            try {
+                omsOrderRepository.save(order);
+                omsOrderOperateHistoryRepository.save(history);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        throw new Exception("request param have wrong format or wrong");
+    }
+
+    @Override
+    public boolean updateNote(Integer id, String note, Integer status) throws Exception {
+        if (omsOrderRepository.findById(id).isPresent()){
+            OmsOrder order = omsOrderRepository.findById(id).get();
+            OmsOrderOperateHistory history = new OmsOrderOperateHistory();
+            history.setOrderId(id);
+            if (note !=null){
+                order.setNote(note);
+                history.setNote("修改备注信息: "+note);
+            }
+            if (status != null){
+                order.setStatus(status);
+                history.setOrderStatus(status);
+            }
+            history.setCreateTime(new Date());
+            history.setOperateMan("Admin");
+
+            try {
+                omsOrderRepository.save(order);
+                omsOrderOperateHistoryRepository.save(history);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        throw new Exception("request param have wrong format or wrong");
     }
 }
