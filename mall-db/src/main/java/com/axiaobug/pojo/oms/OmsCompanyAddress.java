@@ -108,7 +108,7 @@ public class OmsCompanyAddress implements Serializable {
 				'}';
 	}
 
-	@OneToMany(mappedBy = "omsCompanyAddress")
-	private List<OmsOrderReturnApply> orderReturnApplies = new ArrayList<>();
+//	@OneToMany(mappedBy = "omsCompanyAddress")
+//	private List<OmsOrderReturnApply> orderReturnApplies = new ArrayList<>();
 
 }

@@ -54,7 +54,6 @@ public class OmsOrderController {
         Specification<OmsOrder> specification = orderService.orderQueryParam(queryParam);
         Page<OmsOrder> orderPage = omsOrderRepository.findAll(specification,pageable);
         List<OmsOrder> orderList = orderPage.getContent();
-        System.out.println(orderList.size());
         return CommonResult.success(orderList);
     }
 

@@ -98,7 +98,7 @@ public class OmsOrderServiceImpl implements OmsOrderService {
                 Date queryTime = queryParam.getCreateTime();
                 Date beginOfDay = DateUtil.beginOfDay(queryTime);
                 Date endOfDay = DateUtil.endOfDay(queryTime);
-                predicates.add(criteriaBuilder.between(root.get("createTime"), beginOfDay, endOfDay));
+                predicates.add(criteriaBuilder.between(root.get("createTime").as(String.class), beginOfDay.toString(), endOfDay.toString()));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };

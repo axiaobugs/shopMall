@@ -179,11 +179,11 @@ public class OmsOrderReturnApply implements Serializable {
 
 	/*********************************************************/
 
-	@ManyToOne
-	@JoinColumn(name = "order_id",insertable = false,updatable = false)
-	private OmsOrder omsOrder;
-
-	@ManyToOne
-	@JoinColumn(name = "company_address_id",insertable = false,updatable = false)
-	private OmsCompanyAddress omsCompanyAddress;
+//	@ManyToOne
+//	@JoinColumn(name = "order_id",insertable = false,updatable = false)
+//	private OmsOrder omsOrder;
+//
+//	@ManyToOne
+//	@JoinColumn(name = "company_address_id",insertable = false,updatable = false)
+//	private OmsCompanyAddress omsCompanyAddress;
 }
