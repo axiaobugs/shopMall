@@ -1,8 +1,11 @@
 package com.axiaobug.oms;
 
 import com.axiaobug.MallApiApplication;
+import com.axiaobug.dto.OmsOrderDeliveryParam;
+import com.axiaobug.dto.OmsReceiverInfoParam;
 import com.axiaobug.pojo.oms.OmsOrder;
 import com.axiaobug.repository.oms.OmsOrderRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +20,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yanxiao
@@ -65,7 +69,12 @@ public class OrderTest {
 
         if (omsOrderRepository.findById(12).isPresent()){
             OmsOrder order = omsOrderRepository.findById(12).get();
-            Assertions.assertEquals(1,order.getDeleteStatus());
+            try {
+                Assertions.assertEquals(1,order.getDeleteStatus());
+                System.out.println("测试通过");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
     }
@@ -80,4 +89,26 @@ public class OrderTest {
         Assertions.assertEquals(200, mvcResult.getResponse().getStatus());
         System.out.println(mvcResult.getResponse().getContentAsString());
     }
+
+    @DisplayName("修改收货人信息")
+    @Test
+    public void deliveryTest() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        OmsReceiverInfoParam receiverInfoParam = new OmsReceiverInfoParam();
+        receiverInfoParam.setOrderId(12);
+        receiverInfoParam.setReceiverName("方言啸");
+        receiverInfoParam.setStatus(5);
+        String requestBody = objectMapper.writeValueAsString(receiverInfoParam);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .patch("/order/update/receiverInfo")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andReturn();
+        OmsOrder order = omsOrderRepository.findById(12).get();
+        Assertions.assertEquals("方言啸",order.getReceiverName());
+        Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
+
+    }
+
 }

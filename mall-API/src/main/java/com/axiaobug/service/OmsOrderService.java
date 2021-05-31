@@ -3,6 +3,7 @@ package com.axiaobug.service;
 import com.axiaobug.dto.OmsOrderDeliveryParam;
 import com.axiaobug.dto.OmsOrderDetail;
 import com.axiaobug.dto.OmsOrderQueryParam;
+import com.axiaobug.dto.OmsReceiverInfoParam;
 import com.axiaobug.pojo.oms.OmsOrder;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,12 @@ public interface OmsOrderService {
      * 获取指定订单详情
      */
     OmsOrderDetail detail(Integer id);
+
+    /**
+     * 修改订单收货人信息
+     */
+    @Transactional
+    boolean updateReceiverInfo(OmsReceiverInfoParam receiverInfoParam) throws Exception;
 
 
 }

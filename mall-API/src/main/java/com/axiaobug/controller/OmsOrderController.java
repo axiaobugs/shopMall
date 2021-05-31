@@ -4,6 +4,7 @@ import com.axiaobug.common.CommonResult;
 import com.axiaobug.dto.OmsOrderDeliveryParam;
 import com.axiaobug.dto.OmsOrderDetail;
 import com.axiaobug.dto.OmsOrderQueryParam;
+import com.axiaobug.dto.OmsReceiverInfoParam;
 import com.axiaobug.pojo.oms.OmsOrder;
 import com.axiaobug.repository.oms.OmsOrderRepository;
 import com.axiaobug.service.impl.OmsOrderDeliveryServiceImpl;
@@ -99,4 +100,40 @@ public class OmsOrderController {
         OmsOrderDetail orderDetailResult = this.orderService.detail(id);
         return CommonResult.success(orderDetailResult);
     }
+
+
+    @ApiOperation("修改收货人信息")
+    @PatchMapping(value = "/update/receiverInfo")
+    public CommonResult updateReceiverInfo(@RequestBody OmsReceiverInfoParam receiverInfoParam) throws Exception {
+        boolean status = orderService.updateReceiverInfo(receiverInfoParam);
+        if (status) {
+            return CommonResult.success(true);
+        }
+        return CommonResult.failed();
+    }
+
+//    @ApiOperation("修改订单费用信息")
+//    @RequestMapping(value = "/update/moneyInfo", method = RequestMethod.POST)
+//    @ResponseBody
+//    public CommonResult updateReceiverInfo(@RequestBody OmsMoneyInfoParam moneyInfoParam) {
+//        int count = orderService.updateMoneyInfo(moneyInfoParam);
+//        if (count > 0) {
+//            return CommonResult.success(count);
+//        }
+//        return CommonResult.failed();
+//    }
+//
+//    @ApiOperation("备注订单")
+//    @RequestMapping(value = "/update/note", method = RequestMethod.POST)
+//    @ResponseBody
+//    public CommonResult updateNote(@RequestParam("id") Long id,
+//                                   @RequestParam("note") String note,
+//                                   @RequestParam("status") Integer status) {
+//        int count = orderService.updateNote(id, note, status);
+//        if (count > 0) {
+//            return CommonResult.success(count);
+//        }
+//        return CommonResult.failed();
+//    }
+
 }

@@ -8,8 +8,14 @@ package com.axiaobug.common;
  */
 
 public enum ResultCode implements IErrorCode{
-    // SUCCESS
-    SUCCESS(200, "SUCCESS"),
+    // OK [GET]
+    SUCCESS(200, "GET SUCCESS"),
+    //CREATED [POST/PUT/PATCH]
+    CREATED(201,"THE USER CREATED OR MODIFIED THE DATA SUCCESSFULLY."),
+    //ACCEPTED
+    ACCEPTED(202,"A REQUEST HAS ENTERED THE BACKGROUND QUEUE (ASYNCHRONOUS TASK)"),
+    //NO CONTENT
+    DELETED(204,"DELETED"),
     // FAILED
     FAILED(500, "操作失败"),
     // VALIDATE_FAILED
@@ -17,7 +23,11 @@ public enum ResultCode implements IErrorCode{
     // UNAUTHORIZED
     UNAUTHORIZED(401, "暂未登录或token已经过期"),
     // FORBIDDEN
-    FORBIDDEN(403, "没有相关权限");
+    FORBIDDEN(403, "没有相关权限"),
+    // NOT ACCEPTABLE
+    NOTACCEPTABLE(406,"THE FORMAT REQUESTED BY THE USER IS NOT AVAILABLE"),
+    // UNPROCESABLE
+    ERRORVERIFICATION(422,"A VERIFICATION ERROR OCCURRED");
     private final long code;
     private final String message;
 

@@ -3,6 +3,7 @@ package com.axiaobug.service.impl;
 import cn.hutool.core.date.DateUtil;
 import com.axiaobug.dto.OmsOrderDetail;
 import com.axiaobug.dto.OmsOrderQueryParam;
+import com.axiaobug.dto.OmsReceiverInfoParam;
 import com.axiaobug.pojo.oms.OmsOrder;
 import com.axiaobug.pojo.oms.OmsOrderItem;
 import com.axiaobug.pojo.oms.OmsOrderOperateHistory;
@@ -13,6 +14,7 @@ import com.axiaobug.service.OmsOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.criteria.Predicate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Service
 public class OmsOrderServiceImpl implements OmsOrderService {
+
 
     private final OmsOrderRepository omsOrderRepository;
     private final OmsOrderOperateHistoryRepository omsOrderOperateHistoryRepository;
@@ -154,5 +157,52 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         List<OmsOrderOperateHistory> operateHistories = omsOrderOperateHistoryRepository.findAllById(Collections.singleton(id));
         OmsOrder omsOrder = omsOrderRepository.findById(id).orElse(null);
         return new OmsOrderDetail(omsOrder,orderItems,operateHistories);
+    }
+
+    @Override
+    public boolean updateReceiverInfo(OmsReceiverInfoParam receiverInfoParam) throws Exception {
+        if (omsOrderRepository.findById(receiverInfoParam.getOrderId()).isPresent()){
+            OmsOrder order = omsOrderRepository.findById(receiverInfoParam.getOrderId()).get();
+            OmsOrderOperateHistory history = new OmsOrderOperateHistory();
+            history.setOrderId(receiverInfoParam.getOrderId());
+            if (receiverInfoParam.getReceiverName()!= null){
+                order.setReceiverName(receiverInfoParam.getReceiverName());
+            }
+            if (receiverInfoParam.getReceiverPhone() != null){
+                order.setReceiverPhone(receiverInfoParam.getReceiverPhone());
+            }
+            if (receiverInfoParam.getReceiverPostCode()!= null){
+                order.setReceiverPostCode(receiverInfoParam.getReceiverPostCode());
+            }
+            if (receiverInfoParam.getReceiverDetailAddress()!= null){
+                order.setReceiverAddress(receiverInfoParam.getReceiverDetailAddress());
+            }
+            if (receiverInfoParam.getReceiverProvince()!= null){
+                order.setReceiverProvince(receiverInfoParam.getReceiverProvince());
+            }
+            if (receiverInfoParam.getReceiverCity()!=null){
+                order.setReceiverCity(receiverInfoParam.getReceiverCity());
+            }
+            if (receiverInfoParam.getReceiverRegion()!=null){
+                order.setReceiverSuburb(receiverInfoParam.getReceiverRegion());
+            }
+            if (receiverInfoParam.getStatus()!=null){
+                order.setStatus(receiverInfoParam.getStatus());
+                history.setOrderStatus(receiverInfoParam.getStatus());
+            }
+            history.setCreateTime(new Date());
+            history.setNote("修改收件人信息");
+            history.setOperateMan("Admin");
+            try {
+                omsOrderRepository.save(order);
+                omsOrderOperateHistoryRepository.save(history);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        throw new Exception("request param have wrong format or wrong");
+
     }
 }
