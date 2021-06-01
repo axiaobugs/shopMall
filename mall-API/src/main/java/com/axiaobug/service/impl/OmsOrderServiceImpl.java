@@ -1,6 +1,6 @@
 package com.axiaobug.service.impl;
 
-import cn.hutool.core.date.DateUtil;
+import com.axiaobug.common.CommonMethod;
 import com.axiaobug.dto.OmsMoneyInfoParam;
 import com.axiaobug.dto.OmsOrderDetail;
 import com.axiaobug.dto.OmsOrderQueryParam;
@@ -28,15 +28,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class OmsOrderServiceImpl implements OmsOrderService {
 
-
+    private final CommonMethod commonMethod;
     private final OmsOrderRepository omsOrderRepository;
     private final OmsOrderOperateHistoryRepository omsOrderOperateHistoryRepository;
     private final OmsOrderItemsRepository omsOrderItemsRepository;
 
     @Autowired
-    public OmsOrderServiceImpl(OmsOrderRepository omsOrderRepository,
+    public OmsOrderServiceImpl(CommonMethod commonMethod, OmsOrderRepository omsOrderRepository,
                                OmsOrderOperateHistoryRepository omsOrderOperateHistoryRepository,
                                OmsOrderItemsRepository omsOrderItemsRepository) {
+        this.commonMethod = commonMethod;
         this.omsOrderRepository = omsOrderRepository;
         this.omsOrderOperateHistoryRepository = omsOrderOperateHistoryRepository;
         this.omsOrderItemsRepository = omsOrderItemsRepository;
@@ -95,10 +96,12 @@ public class OmsOrderServiceImpl implements OmsOrderService {
             }
             // time range search
             if (queryParam.getCreateTime() != null) {
-                Date queryTime = queryParam.getCreateTime();
-                Date beginOfDay = DateUtil.beginOfDay(queryTime);
-                Date endOfDay = DateUtil.endOfDay(queryTime);
-                predicates.add(criteriaBuilder.between(root.get("createTime").as(String.class), beginOfDay.toString(), endOfDay.toString()));
+                commonMethod.timeRangeMatch(predicates,
+                        queryParam.getCreateTime(),
+                        root,
+                        criteriaQuery,
+                        criteriaBuilder,
+                        "createTime");
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
@@ -127,7 +130,7 @@ public class OmsOrderServiceImpl implements OmsOrderService {
                 e.printStackTrace();
             }
         });
-        return i.incrementAndGet();
+        return i.get();
     }
 
     @Override
@@ -149,7 +152,7 @@ public class OmsOrderServiceImpl implements OmsOrderService {
             }
 
         });
-        return i.incrementAndGet();
+        return i.get();
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.axiaobug.dto.OmsReturnApplyQueryParam;
 import com.axiaobug.dto.OmsUpdateStatusParam;
 import com.axiaobug.pojo.oms.OmsOrderReturnApply;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,15 +23,17 @@ public interface OmsOrderReturnApplyService {
     /**
      * 批量删除申请
      */
-    int delete(List<Long> ids);
+    @Transactional(rollbackFor = Exception.class)
+    int delete(List<Integer> ids,String note);
 
     /**
      * 修改申请状态
      */
-    int updateStatus(Long id, OmsUpdateStatusParam statusParam);
+    @Transactional(rollbackFor = Exception.class)
+    Boolean updateStatus(OmsUpdateStatusParam statusParam) throws Exception;
 
     /**
      * 获取指定申请详情
      */
-    OmsOrderReturnApplyResult getItem(Long id);
+    OmsOrderReturnApplyResult getItem(Integer id) throws Exception;
 }

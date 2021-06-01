@@ -1,21 +1,24 @@
 package com.axiaobug.service.impl;
 
-import cn.hutool.core.date.DateUtil;
+import com.axiaobug.common.CommonMethod;
 import com.axiaobug.dto.OmsOrderReturnApplyResult;
 import com.axiaobug.dto.OmsReturnApplyQueryParam;
 import com.axiaobug.dto.OmsUpdateStatusParam;
+import com.axiaobug.pojo.oms.OmsCompanyAddress;
+import com.axiaobug.pojo.oms.OmsOrderOperateHistory;
 import com.axiaobug.pojo.oms.OmsOrderReturnApply;
+import com.axiaobug.repository.oms.OmsCompanyAddressRepository;
+import com.axiaobug.repository.oms.OmsOrderOperateHistoryRepository;
 import com.axiaobug.repository.oms.OmsOrderReturnApplyRepository;
 import com.axiaobug.service.OmsOrderReturnApplyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.criteria.Predicate;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Yanxiao
@@ -25,10 +28,17 @@ import java.util.List;
 @Service
 public class OmsOrderReturnApplyServiceImpl implements OmsOrderReturnApplyService {
 
+    private final CommonMethod commonMethod;
     private final OmsOrderReturnApplyRepository returnApplyRepository;
+    private final OmsOrderOperateHistoryRepository historyRepository;
+    private final OmsCompanyAddressRepository addressRepository;
 
-    public OmsOrderReturnApplyServiceImpl(OmsOrderReturnApplyRepository returnApplyRepository) {
+    @Autowired
+    public OmsOrderReturnApplyServiceImpl(CommonMethod commonMethod, OmsOrderReturnApplyRepository returnApplyRepository, OmsOrderOperateHistoryRepository historyRepository, OmsCompanyAddressRepository addressRepository) {
+        this.commonMethod = commonMethod;
         this.returnApplyRepository = returnApplyRepository;
+        this.historyRepository = historyRepository;
+        this.addressRepository = addressRepository;
     }
 
 
@@ -54,33 +64,112 @@ public class OmsOrderReturnApplyServiceImpl implements OmsOrderReturnApplyServic
             }
             // Range match
             if (queryParam.getCreateTime() != null) {
-                Date queryTime = queryParam.getCreateTime();
-                Date beginOfDay = DateUtil.beginOfDay(queryTime);
-                Date endOfDay = DateUtil.endOfDay(queryTime);
-                predicates.add(criteriaBuilder.between(root.get("createTime").as(String.class), beginOfDay.toString(), endOfDay.toString()));
+                commonMethod.timeRangeMatch(predicates,
+                        queryParam.getCreateTime(),
+                        root,
+                        criteriaQuery,
+                        criteriaBuilder,
+                        "createTime");
             }
             if (queryParam.getHandleTime() != null) {
-                Date queryTime = queryParam.getHandleTime();
-                Date beginOfDay = DateUtil.beginOfDay(queryTime);
-                Date endOfDay = DateUtil.endOfDay(queryTime);
-                predicates.add(criteriaBuilder.between(root.get("handleTime").as(String.class), beginOfDay.toString(), endOfDay.toString()));
+                commonMethod.timeRangeMatch(predicates,
+                        queryParam.getCreateTime(),
+                        root,
+                        criteriaQuery,
+                        criteriaBuilder,
+                        "handleTime");
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
 
     @Override
-    public int delete(List<Long> ids) {
-        return 0;
+    public int delete(List<Integer> ids,String note) {
+        AtomicInteger i= new AtomicInteger();
+        Date time = new Date();
+
+        ids.forEach(id ->{
+            OmsOrderOperateHistory history = new OmsOrderOperateHistory();
+            if (returnApplyRepository.findById(id).isPresent()){
+                OmsOrderReturnApply returnApply = returnApplyRepository.findById(id).get();
+                returnApply.setStatus(3);
+                history.setOrderId(returnApply.getOrderId());
+                history.setNote("退货申请删除: "+note);
+                history.setOperateMan("Admin");
+                history.setCreateTime(time);
+                history.setOrderStatus(7);
+                try {
+                    returnApplyRepository.saveAndFlush(returnApply);
+                    historyRepository.save(history);
+                    i.getAndIncrement();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        return i.get();
     }
 
     @Override
-    public int updateStatus(Long id, OmsUpdateStatusParam statusParam) {
-        return 0;
+    public Boolean updateStatus(OmsUpdateStatusParam statusParam) throws Exception {
+        OmsOrderOperateHistory history = new OmsOrderOperateHistory();
+        Integer id = statusParam.getId();
+        if (returnApplyRepository.findById(id).isPresent()) {
+            OmsOrderReturnApply returnApply = returnApplyRepository.findById(id).get();
+            history.setOrderId(id);
+            if (statusParam.getCompanyAddressId() != null) {
+                returnApply.setCompanyAddressId(statusParam.getCompanyAddressId());
+            }
+            if (statusParam.getReturnAmount()!= null){
+                returnApply.setReturnAmount(statusParam.getReturnAmount());
+            }
+            if (statusParam.getHandleNote()!= null){
+                returnApply.setHandleNote(statusParam.getHandleNote());
+            }
+            if (statusParam.getHandleMan()!=null){
+                returnApply.setHandleMan(statusParam.getHandleMan());
+                history.setOperateMan(statusParam.getHandleMan());
+            }
+            if (statusParam.getReceiveNote()!=null){
+                returnApply.setReceiveNote(statusParam.getReceiveNote());
+                history.setNote("退货订单状态更新"+statusParam.getReceiveNote());
+            }
+            if (statusParam.getReceiveMan()!=null){
+                returnApply.setReceiveMan(statusParam.getReceiveMan());
+            }
+            if (statusParam.getStatus()!=null){
+                returnApply.setStatus(statusParam.getStatus());
+                history.setOrderStatus(statusParam.getStatus());
+            }
+
+            try {
+                returnApplyRepository.save(returnApply);
+                historyRepository.save(history);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        throw new Exception("");
     }
 
     @Override
-    public OmsOrderReturnApplyResult getItem(Long id) {
-        return null;
+    public OmsOrderReturnApplyResult getItem(Integer id) throws Exception {
+        OmsOrderReturnApplyResult result = new OmsOrderReturnApplyResult();
+        if (returnApplyRepository.findById(id).isPresent()) {
+            OmsOrderReturnApply returnApply = returnApplyRepository.findById(id).get();
+            result.setReturnApply(returnApply);
+            Integer companyAddressId = returnApply.getCompanyAddressId();
+            if (companyAddressId != null) {
+                if (addressRepository.findById(companyAddressId).isPresent()) {
+                    OmsCompanyAddress address = addressRepository.findById(companyAddressId).get();
+                    result.setCompanyAddress(address);
+                }
+            }
+            return  result;
+        }
+        throw new Exception("Wrong");
     }
 }
