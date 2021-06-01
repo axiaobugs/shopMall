@@ -1,10 +1,14 @@
 package com.axiaobug.oms;
 
+import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
 import com.axiaobug.dto.OmsMoneyInfoParam;
 import com.axiaobug.dto.OmsReceiverInfoParam;
 import com.axiaobug.pojo.oms.OmsOrder;
+import com.axiaobug.pojo.oms.OmsOrderReturnReason;
+import com.axiaobug.pojo.oms.OmsOrderSetting;
 import com.axiaobug.repository.oms.OmsOrderRepository;
+import com.axiaobug.repository.oms.OmsOrderSettingRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 
 /**
@@ -36,6 +41,14 @@ public class OrderTest {
 
     @Autowired
     private OmsOrderRepository omsOrderRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private OmsOrderSettingRepository settingRepository;
+
+
     private MockMvc mockMvc;
 
 
@@ -54,7 +67,7 @@ public class OrderTest {
                 .param("note",note)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
-        Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
     }
 
     @DisplayName("批量删除订单")
@@ -75,7 +88,7 @@ public class OrderTest {
                 e.printStackTrace();
             }
         }
-        Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
     }
 
     @DisplayName("获取指定订单详情")
@@ -85,14 +98,12 @@ public class OrderTest {
                 .get("/order/12")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
-        Assertions.assertEquals(200, mvcResult.getResponse().getStatus());
-        System.out.println(mvcResult.getResponse().getContentAsString());
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
     }
 
     @DisplayName("修改收货人信息")
     @Test
     public void editReceiverTest() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
         OmsReceiverInfoParam receiverInfoParam = new OmsReceiverInfoParam();
         receiverInfoParam.setOrderId(12);
         receiverInfoParam.setReceiverName("方言啸");
@@ -106,14 +117,13 @@ public class OrderTest {
                 .andReturn();
         OmsOrder order = omsOrderRepository.findById(12).get();
         Assertions.assertEquals("方言啸",order.getReceiverName());
-        Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
         System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
     @DisplayName("修改订单费用信息")
     @Test
     public void editFeeTest() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
         OmsMoneyInfoParam moneyInfoParam = new OmsMoneyInfoParam();
         moneyInfoParam.setOrderId(14);
         moneyInfoParam.setFreightAmount(BigDecimal.valueOf(808080));
@@ -127,7 +137,7 @@ public class OrderTest {
         OmsOrder order = omsOrderRepository.findById(14).get();
         Assertions.assertEquals(BigDecimal.valueOf(808080),
                                 order.getFreightAmount());
-        Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
         System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
@@ -143,8 +153,37 @@ public class OrderTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         OmsOrder order = omsOrderRepository.findById(13).get();
-        Assertions.assertEquals(200,mvcResult.getResponse().getStatus());
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
         Assertions.assertEquals(note,order.getNote());
     }
+
+    @DisplayName("获取指定订单设置")
+    @Test
+    public void orderSettingTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/orderSetting/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+
+    @DisplayName("修改指定订单设置")
+    @Test
+    public void returnReasonCreateTest() throws Exception {
+        OmsOrderSetting setting = settingRepository.findById(1).get();
+        setting.setCommentOverTime(90);
+
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                .patch("/returnReason/update")
+                .characterEncoding("utf-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(setting))).andReturn();
+        Assertions.assertEquals("200",JSONUtil.parseObj(result.getResponse().getContentAsString()).getStr("code"));
+        Assertions.assertEquals(90,settingRepository.findById(1).get().getCommentOverTime());
+    }
+
+
 
 }

@@ -39,9 +39,6 @@ public class OrderReturnTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    private OmsOrderRepository omsOrderRepository;
-
-    @Autowired
     private OmsOrderReturnApplyRepository applyRepository;
 
     @Autowired

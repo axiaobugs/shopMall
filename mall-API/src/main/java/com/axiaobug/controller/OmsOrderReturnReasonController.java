@@ -6,13 +6,12 @@ import com.axiaobug.repository.oms.OmsOrderReturnReasonRepository;
 import com.axiaobug.service.OmsOrderReturnReasonService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -24,10 +23,10 @@ import java.util.List;
 @Api(tags = "OmsOrderReturnReasonController")
 @RequestMapping("/returnReason")
 public class OmsOrderReturnReasonController {
-    @Autowired
+    @Resource
     private OmsOrderReturnReasonService orderReturnReasonService;
 
-    @Autowired
+    @Resource
     private OmsOrderReturnReasonRepository reasonRepository;
 
     @ApiOperation("添加退货原因")
