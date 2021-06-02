@@ -13,7 +13,7 @@ public interface PmsProductAttributeCategoryRepository
         extends JpaRepository<PmsProductAttributeCategory,Integer>,
         JpaSpecificationExecutor<PmsProductAttributeCategory> {
 
-
+    PmsProductAttributeCategory findByName(String name);
 
 
 

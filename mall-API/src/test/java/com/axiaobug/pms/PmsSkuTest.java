@@ -2,11 +2,8 @@ package com.axiaobug.pms;
 
 import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
-import com.axiaobug.dto.OmsReceiverInfoParam;
-import com.axiaobug.pojo.oms.OmsOrder;
 import com.axiaobug.pojo.pms.PmsSkuStock;
 import com.axiaobug.repository.pms.PmsSkuStockRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +27,7 @@ import java.util.List;
  * @author Yanxiao
  * @version 0.1.0
  * @date 06 2021
+ * TODO: SKU 批量更新需要 增加更多的测试
  */
 @SpringBootTest(classes = MallApiApplication.class)
 @Transactional

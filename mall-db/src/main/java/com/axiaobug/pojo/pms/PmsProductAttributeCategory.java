@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 /**
@@ -36,9 +37,11 @@ public class PmsProductAttributeCategory implements Serializable {
 
 
    	@OneToMany(mappedBy = "pmsProductAttributeCategory",cascade = CascadeType.PERSIST)
+	@JsonIgnore
 	private List<PmsProductAttribute> pmsProductAttributes = new ArrayList<>();
 
    	@OneToMany(mappedBy = "pmsProductAttributeCategory",cascade = CascadeType.PERSIST)
+	@JsonIgnore
 	private List<PmsProduct> products = new ArrayList<>();
 
 
