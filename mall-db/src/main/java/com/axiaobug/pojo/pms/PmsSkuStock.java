@@ -2,6 +2,8 @@ package com.axiaobug.pojo.pms;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import java.math.BigDecimal;
 
@@ -79,6 +81,7 @@ public class PmsSkuStock implements Serializable {
 
    	@ManyToOne
 	@JoinColumn(name = "product_id",insertable = false,updatable = false)
+	@JsonIgnore
 	private PmsProduct pmsProduct;
 
 	@Override

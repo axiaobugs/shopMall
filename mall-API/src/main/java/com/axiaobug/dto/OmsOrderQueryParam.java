@@ -1,5 +1,6 @@
 package com.axiaobug.dto;
 
+import com.axiaobug.pojo.pms.PmsProduct;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class OmsOrderQueryParam {
+public class OmsOrderQueryParam  {
     @ApiModelProperty(value = "分页容量")
     private Integer pageNum;
     @ApiModelProperty(value = "分页大小")

@@ -1,4 +1,4 @@
-package com.axiaobug.controller;
+package com.axiaobug.controller.oms;
 
 import com.axiaobug.common.CommonResult;
 import com.axiaobug.pojo.oms.OmsCompanyAddress;
