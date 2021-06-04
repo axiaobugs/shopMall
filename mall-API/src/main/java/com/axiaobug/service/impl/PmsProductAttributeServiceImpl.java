@@ -97,10 +97,11 @@ public class PmsProductAttributeServiceImpl implements PmsProductAttributeServic
                     if (attributeRepository.findById(relation.getProductAttributeId()).isPresent()){
                         PmsProductAttribute attribute = attributeRepository.findById(relation.getProductAttributeId()).get();
                         attrInfo.setAttributeCategoryId(attribute.getProductAttributeCategoryId());
-                        attrInfos.add(attrInfo);
+                    }else{
+                        attrInfo.setAttributeCategoryId(0);
                     }
-                    attrInfo.setAttributeCategoryId(0);
                     attrInfos.add(attrInfo);
+
                 });
             }
             return attrInfos;
