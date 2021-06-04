@@ -2,8 +2,10 @@ package com.axiaobug.pms;
 
 import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
+import com.axiaobug.dto.PmsProductAttributeParam;
 import com.axiaobug.pojo.pms.PmsProductAttributeCategory;
 import com.axiaobug.repository.pms.PmsProductAttributeCategoryRepository;
+import com.axiaobug.repository.pms.PmsProductAttributeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.AssertionErrors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -36,6 +37,9 @@ public class AttributeTest {
 
     @Autowired
     private PmsProductAttributeCategoryRepository attributeCategoryRepository;
+
+    @Autowired
+    private PmsProductAttributeRepository attributeRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -110,6 +114,48 @@ public class AttributeTest {
         String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
         List list = objectMapper.readValue(data, List.class);
         Assertions.assertFalse(list.isEmpty());
+    }
 
+    @DisplayName("修改商品属性信息")
+    @Test
+    public void updateAttributeTest() throws Exception {
+        PmsProductAttributeParam param = new PmsProductAttributeParam();
+        param.setProductAttributeCategoryId(11);
+        param.setName("显示器尺寸");
+        param.setType(0);
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .patch("/productAttribute/update/13")
+                .content(objectMapper.writeValueAsString(param))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        Assertions.assertEquals(11,attributeRepository.findById(13).get().getProductAttributeCategoryId());
+    }
+
+    @DisplayName("查询单个商品属性")
+    @Test
+    public void getAttItemTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/productAttribute/13")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+    }
+
+    @DisplayName("查询单个商品属性")
+    @Test
+    public void getAttAndProCateTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/productAttribute/attrInfo/10")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+
+
+    @Test
+    public void repositoryTest(){
+        System.out.println(attributeRepository.getOne(13));
     }
 }

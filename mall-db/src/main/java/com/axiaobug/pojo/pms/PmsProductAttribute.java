@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 /**
@@ -95,16 +96,36 @@ public class PmsProductAttribute implements Serializable {
    	@Column(name = "type" )
 	private Integer type = 0;
 
-   	/*************************************************************/
+	@Override
+	public String toString() {
+		return "PmsProductAttribute{" +
+				"id=" + id +
+				", productAttributeCategoryId=" + productAttributeCategoryId +
+				", name='" + name + '\'' +
+				", selectType=" + selectType +
+				", inputType=" + inputType +
+				", inputList='" + inputList + '\'' +
+				", sort=" + sort +
+				", filterType=" + filterType +
+				", searchType=" + searchType +
+				", relatedStatus=" + relatedStatus +
+				", handAddStatus=" + handAddStatus +
+				", type=" + type +
+				'}';
+	}
+
+	/*************************************************************/
 
 
-   	@ManyToOne
+   	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_attribute_category_id",
 			insertable = false,
 			updatable = false)
+	@JsonIgnore
 	private PmsProductAttributeCategory pmsProductAttributeCategory;
 
-   	@OneToMany(mappedBy = "pmsProductAttribute")
+   	@OneToMany(mappedBy = "pmsProductAttribute",fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<PmsProductAttributeValue> productAttributeValues = new ArrayList<>();
 
 }

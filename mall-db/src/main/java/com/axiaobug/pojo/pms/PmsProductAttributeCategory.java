@@ -36,11 +36,11 @@ public class PmsProductAttributeCategory implements Serializable {
 	private Integer paramCount = 0;
 
 
-   	@OneToMany(mappedBy = "pmsProductAttributeCategory",cascade = CascadeType.PERSIST)
+   	@OneToMany(mappedBy = "pmsProductAttributeCategory",cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<PmsProductAttribute> pmsProductAttributes = new ArrayList<>();
 
-   	@OneToMany(mappedBy = "pmsProductAttributeCategory",cascade = CascadeType.PERSIST)
+   	@OneToMany(mappedBy = "pmsProductAttributeCategory",cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<PmsProduct> products = new ArrayList<>();
 

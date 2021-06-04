@@ -2,6 +2,8 @@ package com.axiaobug.pojo.pms;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 /**
@@ -32,12 +34,14 @@ public class PmsProductAttributeValue implements Serializable {
    	@Column(name = "value" )
 	private String value = null;
 
-   	@ManyToOne
+   	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_attribute_id",insertable = false,updatable = false)
+	@JsonIgnore
 	private PmsProductAttribute pmsProductAttribute;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id",insertable = false,updatable = false)
+	@JsonIgnore
 	private PmsProduct pmsProduct;
 
 

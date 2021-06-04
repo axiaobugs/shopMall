@@ -4,6 +4,8 @@ import com.axiaobug.pojo.pms.PmsProductCategoryAttributeRelation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
+
 /**
  * @author Yanxiao
  * @version 0.1.0
@@ -12,4 +14,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface PmsProductCategoryAttributeRelationRepository
         extends JpaRepository<PmsProductCategoryAttributeRelation,Integer>,
         JpaSpecificationExecutor<PmsProductCategoryAttributeRelation> {
+
+    List<PmsProductCategoryAttributeRelation> findAllByProductCategoryId(Integer productCategoryId);
 }

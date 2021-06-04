@@ -294,6 +294,7 @@ public class PmsProduct implements Serializable {
 			referencedColumnName = "id",
 			insertable = false,
 			updatable = false)
+	@JsonIgnore
 	private PmsBrand pmsBrand;
 
    	@ManyToOne(fetch = FetchType.LAZY,optional = true)
@@ -302,6 +303,7 @@ public class PmsProduct implements Serializable {
 			referencedColumnName = "id",
 			insertable = false,
 			updatable = false)
+	@JsonIgnore
 	private PmsFeightTemplate pmsFeightTemplate;
 
    	@ManyToOne(fetch = FetchType.LAZY,optional = true)
@@ -310,6 +312,7 @@ public class PmsProduct implements Serializable {
 			referencedColumnName = "id",
 			insertable = false,
 			updatable = false)
+	@JsonIgnore
 	private PmsProductAttributeCategory pmsProductAttributeCategory;
 
    	@ManyToOne
@@ -317,25 +320,32 @@ public class PmsProduct implements Serializable {
 			referencedColumnName = "id",
 			insertable = false,
 			updatable = false)
+	@JsonIgnore
 	private PmsProductCategory pmsProductCategory;
 
    	@OneToOne
+	@JsonIgnore
    	private PmsComment comments;
 
 
    	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+	@JsonIgnore
 	private List<PmsProductOperateLog> productOperateLogs = new ArrayList<>();
 
    	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+	@JsonIgnore
 	private List<PmsProductAttributeValue> productAttributeValues = new ArrayList<>();
 
    	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+	@JsonIgnore
 	private List<PmsSkuStock> skuStocks = new ArrayList<>();
 
    	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+	@JsonIgnore
 	private List<PmsProductFullReduction> productFullReductions = new ArrayList<>();
 
    	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+	@JsonIgnore
 	private List<PmsProductVertifyRecord> productVertifyRecords = new ArrayList<>();
 
 }
