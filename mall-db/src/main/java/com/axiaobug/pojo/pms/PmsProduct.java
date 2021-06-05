@@ -289,7 +289,7 @@ public class PmsProduct implements Serializable {
 	}
 
 /******************************************************************************************************************************/
-   	@ManyToOne
+   	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "brand_id",
 			referencedColumnName = "id",
 			insertable = false,
@@ -315,7 +315,7 @@ public class PmsProduct implements Serializable {
 	@JsonIgnore
 	private PmsProductAttributeCategory pmsProductAttributeCategory;
 
-   	@ManyToOne
+   	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_category_id",
 			referencedColumnName = "id",
 			insertable = false,
@@ -323,28 +323,28 @@ public class PmsProduct implements Serializable {
 	@JsonIgnore
 	private PmsProductCategory pmsProductCategory;
 
-   	@OneToOne
+   	@OneToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
    	private PmsComment comments;
 
 
-   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<PmsProductOperateLog> productOperateLogs = new ArrayList<>();
 
-   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<PmsProductAttributeValue> productAttributeValues = new ArrayList<>();
 
-   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<PmsSkuStock> skuStocks = new ArrayList<>();
 
-   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<PmsProductFullReduction> productFullReductions = new ArrayList<>();
 
-   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH)
+   	@OneToMany(mappedBy = "pmsProduct",cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<PmsProductVertifyRecord> productVertifyRecords = new ArrayList<>();
 
