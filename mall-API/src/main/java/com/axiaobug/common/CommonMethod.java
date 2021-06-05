@@ -1,7 +1,9 @@
 package com.axiaobug.common;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import org.springframework.stereotype.Component;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -31,6 +33,18 @@ public class CommonMethod {
         predicates.add(criteriaBuilder.between(root.get(filed).as(String.class), beginOfDay.toString(), endOfDay.toString()));
     }
 
+
+    public Boolean setParamToTarget(Object target,Object source){
+        HashMap<Object, Object> targetMap = gainConditionFromObjectByField(target);
+        if (MapUtil.isNotEmpty(targetMap)){
+            for (Map.Entry<Object,Object> entry:targetMap.entrySet()) {
+                String setMethodName = "set"+entry.getKey().toString();
+                ReflectUtil.invoke(source,setMethodName,entry.getValue());
+            }
+            return MapUtil.isEmpty(gainConditionFromObjectByField(source));
+        }
+        return false;
+    }
 
     /**
     * @Discription:

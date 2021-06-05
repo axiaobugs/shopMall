@@ -1,7 +1,5 @@
 package com.axiaobug.service.impl;
 
-import com.axiaobug.dto.PmsProductAttributeCategoryItem;
-import com.axiaobug.pojo.oms.OmsOrder;
 import com.axiaobug.pojo.pms.PmsProductAttributeCategory;
 import com.axiaobug.repository.pms.PmsProductAttributeCategoryRepository;
 import com.axiaobug.service.PmsProductAttributeCategoryService;
@@ -9,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**
