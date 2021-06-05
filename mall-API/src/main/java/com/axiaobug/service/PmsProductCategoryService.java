@@ -25,7 +25,7 @@ public interface PmsProductCategoryService {
      * 修改商品分类
      */
     @Transactional
-    int update(Integer id, PmsProductCategoryParam pmsProductCategoryParam);
+    Boolean update(Integer id, PmsProductCategoryParam pmsProductCategoryParam) throws Exception;
 
     /**
      * 分页获取商品分类
@@ -35,7 +35,7 @@ public interface PmsProductCategoryService {
     /**
      * 删除商品分类
      */
-    int delete(Integer id);
+    Boolean delete(Integer id);
 
     /**
      * 根据ID获取商品分类
@@ -45,15 +45,15 @@ public interface PmsProductCategoryService {
     /**
      * 批量修改导航状态
      */
-    int updateNavStatus(List<Integer> ids, Integer navStatus);
+    Boolean updateNavStatus(List<Integer> ids, Integer navStatus) throws Exception;
 
     /**
      * 批量修改显示状态
      */
-    int updateShowStatus(List<Integer> ids, Integer showStatus);
+    Boolean updateShowStatus(List<Integer> ids, Integer showStatus) throws Exception;
 
     /**
      * 以层级形式获取商品分类
      */
-    List<PmsProductCategoryWithChildrenItem> listWithChildren();
+    List<PmsProductCategoryWithChildrenItem> listWithChildren() throws Exception;
 }
