@@ -23,6 +23,9 @@ import java.util.List;
 @Service
 public class PmsProductCategoryServiceImpl implements PmsProductCategoryService {
 
+    private final static String NAV_METHOD = "nav";
+    private final static String SHOW_METHOD = "show";
+
     @Resource
     private CommonMethod commonMethod;
 
@@ -140,9 +143,9 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
             boolean flag = categoryRepository.findById(id).isPresent();
             if (flag){
                 PmsProductCategory category = categoryRepository.findById(id).get();
-                if ("nav".equals(method)){
+                if (NAV_METHOD.equals(method)){
                     category.setNavStatus(status);
-                }else if ("show".equals(method)){
+                }else if (SHOW_METHOD.equals(method)){
                     category.setShowStatus(status);
                 }else {
                     res.add(1);
