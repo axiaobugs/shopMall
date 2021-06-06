@@ -24,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PmsProduct implements Serializable {
 
-	private static final long serialVersionUID =  4312377958177817138L;
+//	private static final long serialVersionUID =  4312377958177817138L;
 
    	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

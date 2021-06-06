@@ -20,6 +20,7 @@ import java.util.Map;
  * @author Yanxiao
  * @version 0.1.0
  * @date 06 2021
+ * TODO: 递归拿到父类的字段
  */
 @Component
 public class CommonMethod {
@@ -60,10 +61,11 @@ public class CommonMethod {
                 String fieldName = f.getName();
                 //取属性值
                 Object value = getFieldValue(obj, fieldName);
+                String k = capitalizeFirstLetter(fieldName);
                 if (ObjectUtil.isNotNull(value)) {
-                   String k = capitalizeFirstLetter(fieldName);
                    res.put(k,value);
                 }
+
             }
         }
         return res;
