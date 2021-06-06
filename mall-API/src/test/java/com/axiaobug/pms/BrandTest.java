@@ -3,9 +3,12 @@ package com.axiaobug.pms;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
-import com.axiaobug.dto.PmsProductCategoryParam;
+import com.axiaobug.dto.PmsBrandParam;
+import com.axiaobug.pojo.pms.PmsBrand;
+import com.axiaobug.repository.pms.PmsBrandRepository;
 import com.axiaobug.repository.pms.PmsProductCategoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +20,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import javax.transaction.Transactional;
 
 /**
  * @author Yanxiao
@@ -27,8 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @SpringBootTest(classes = MallApiApplication.class)
 @Transactional
-public class CategoryTest {
-
+public class BrandTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -36,7 +39,7 @@ public class CategoryTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private PmsProductCategoryRepository productCategoryRepository;
+    private PmsBrandRepository brandRepository;
 
     private MockMvc mockMvc;
 
@@ -45,119 +48,108 @@ public class CategoryTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-    @DisplayName("添加产品分类")
+    @DisplayName("获取全部品牌列表")
     @Test
-    public void createCategoryTest() throws Exception {
-        PmsProductCategoryParam param = new PmsProductCategoryParam();
-        param.setParentId(2);
-        param.setName("电竞台式机");
-        param.setKeywords("华硕");
+    public void getBranListAllTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/brand/listAll")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
+        Assertions.assertEquals(11,JSONUtil.parseArray(data).size());
+    }
+
+
+    @DisplayName("添加品牌")
+    @Test
+    public void createBranTest() throws Exception {
+        PmsBrandParam param = new PmsBrandParam();
+        param.setName("SONY");
+        param.setFirstLetter("S");
+        param.setSort(100);
+        param.setFactoryStatus(1);
+        param.setShowStatus(1);
 
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .post("/productCategory/create")
+                .post("/brand/create")
                 .content(objectMapper.writeValueAsString(param))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
-
         Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
-        Assertions.assertEquals(37,productCategoryRepository.count());
+        String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
+        Assertions.assertEquals(12,brandRepository.count());
     }
 
-    @DisplayName("修改商品分类")
+    @DisplayName("添加品牌")
     @Test
-    public void updateCategoryTest() throws Exception {
-        PmsProductCategoryParam param = new PmsProductCategoryParam();
-        param.setParentId(2);
-        param.setName("电竞台式机");
-        param.setKeywords("华硕");
-
+    public void updateBranTest() throws Exception {
+        PmsBrandParam param = new PmsBrandParam();
+        param.setName("SONY");
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .patch("/productCategory/update/11")
+                .patch("/brand/update/1")
                 .content(objectMapper.writeValueAsString(param))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
-
-        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
-        Assertions.assertEquals(36,productCategoryRepository.count());
-        Assertions.assertEquals(2,productCategoryRepository.findById(11).get().getParentId());
-    }
-
-    @DisplayName("分页查询商品分类")
-    @Test
-    public void getCategoryByParentIdTest() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .get("/productCategory/list/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
         Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
         String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
-        Assertions.assertEquals(5,JSONUtil.parseArray(data).size());
+        Assertions.assertEquals(11,brandRepository.count());
+        Assertions.assertEquals("SONY",brandRepository.findById(1).get().getName());
     }
 
-    @DisplayName("分页查询商品分类")
+    @DisplayName("删除品牌")
     @Test
-    public void getCategoryByIdTest() throws Exception {
+    public void deleteBranTest() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .get("/productCategory/11")
+                .delete("/brand/delete/2")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
-        String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
-        Assertions.assertEquals("1",JSONUtil.parseObj(data).getStr("navStatus"));
+        Assertions.assertEquals(10,brandRepository.count());
     }
 
-    @DisplayName("删除商品分类")
+    @DisplayName("根据品牌名称分页获取品牌列表")
     @Test
-    public void deleteCategoryByIdTest() throws Exception {
+    public void deleteBranBatchTest() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .delete("/productCategory/delete/11")
+                .get("/brand/list")
+                .param("keyword","三星")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        System.out.println(mvcResult.getResponse().getContentAsString());
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        final String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
+        final JSONArray array = JSONUtil.parseArray(data);
+        Assertions.assertEquals(1,array.size());
+    }
+
+    @DisplayName("批量删除品牌")
+    @Test
+    public void getBranByKeywordTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .delete("/brand/delete/batch")
+                .param("ids","2,4,5")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
-        Assertions.assertEquals(35,productCategoryRepository.count());
+        Assertions.assertEquals(8,brandRepository.count());
     }
 
-    @DisplayName("批量修改导航栏显示状态")
+    @DisplayName("批量更新显示状态")
     @Test
-    public void updateCategoryNavTest() throws Exception {
+    public void updateBrandShowStatusBatchTest() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .patch("/productCategory/update/navStatus")
-                .param("ids","7,8,9")
-                .param("navStatus","0")
+                .patch("/brand/update/showStatus")
+                .param("ids","3,4,5")
+                .param("showStatus","1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
-        Assertions.assertEquals(0,productCategoryRepository.findById(7).get().getNavStatus());
-        Assertions.assertEquals(0,productCategoryRepository.findById(8).get().getNavStatus());
-        Assertions.assertEquals(0,productCategoryRepository.findById(9).get().getNavStatus());
+        Assertions.assertEquals(1,brandRepository.findById(3).get().getShowStatus());
+        Assertions.assertEquals(1,brandRepository.findById(4).get().getShowStatus());
+        Assertions.assertEquals(1,brandRepository.findById(5).get().getShowStatus());
     }
 
-    @DisplayName("批量修改显示状态")
-    @Test
-    public void updateCategoryShowTest() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .patch("/productCategory/update/showStatus")
-                .param("ids","7,8,9")
-                .param("showStatus","0")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
-        Assertions.assertEquals(0,productCategoryRepository.findById(7).get().getShowStatus());
-        Assertions.assertEquals(0,productCategoryRepository.findById(8).get().getShowStatus());
-        Assertions.assertEquals(0,productCategoryRepository.findById(9).get().getShowStatus());
-    }
-
-    @DisplayName("查询所有一级分类及子分类")
-    @Test
-    public void getCategoryWithChildTest() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .get("/productCategory/list/withChildren")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
-        String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
-        Assertions.assertEquals(5,JSONUtil.parseArray(data).toArray().length);
-    }
 }

@@ -19,11 +19,10 @@ import lombok.*;
 @AllArgsConstructor
 public class PmsBrand implements Serializable {
 
-	private static final long serialVersionUID =  1278540195769295643L;
+//	private static final long serialVersionUID =  1278540195769295643L;
 
    	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	private Integer id;
 
    	@Column(name = "name")
@@ -86,8 +85,26 @@ public class PmsBrand implements Serializable {
 	 * */
    	@Column(name = "brand_story" )
 	private String brandStory = null;
-/** *************************************************************************/
 
-   	@OneToMany(mappedBy = "pmsBrand",cascade = CascadeType.PERSIST)
+	@Override
+	public String toString() {
+		return "PmsBrand{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", firstLetter='" + firstLetter + '\'' +
+				", sort=" + sort +
+				", factoryStatus=" + factoryStatus +
+				", showStatus=" + showStatus +
+				", productCount=" + productCount +
+				", productCommentCount=" + productCommentCount +
+				", logo='" + logo + '\'' +
+				", bigPic='" + bigPic + '\'' +
+				", brandStory='" + brandStory + '\'' +
+				'}';
+	}
+
+	/** *************************************************************************/
+
+   	@OneToMany(mappedBy = "pmsBrand",cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
 	private List<PmsProduct> products = new ArrayList<>();
 }

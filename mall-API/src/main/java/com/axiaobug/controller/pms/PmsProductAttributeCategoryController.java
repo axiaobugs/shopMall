@@ -1,7 +1,6 @@
 package com.axiaobug.controller.pms;
 
 import com.axiaobug.common.CommonResult;
-import com.axiaobug.dto.PmsProductAttributeCategoryItem;
 import com.axiaobug.pojo.pms.PmsProductAttributeCategory;
 import com.axiaobug.service.PmsProductAttributeCategoryService;
 import io.swagger.annotations.Api;
@@ -24,7 +23,7 @@ public class PmsProductAttributeCategoryController {
     @Autowired
     private PmsProductAttributeCategoryService productAttributeCategoryService;
 
-    @ApiOperation("添加商品属性分类")
+    @ApiOperation( "添加商品属性分类")
     @PostMapping(value = "/create")
     public CommonResult<Boolean> create(@RequestParam String name) {
         Boolean flag = productAttributeCategoryService.create(name);

@@ -104,7 +104,7 @@ public class PmsProductCategoryController {
         }
     }
 
-    @ApiOperation("修改显示状态")
+    @ApiOperation("批量修改显示状态")
     @PatchMapping(value = "/update/showStatus")
     public CommonResult<Boolean> updateShowStatus(@RequestParam("ids") List<Integer> ids, @RequestParam("showStatus") Integer showStatus) throws Exception {
         Boolean flag = productCategoryService.updateShowStatus(ids, showStatus);

@@ -41,7 +41,7 @@ public class CommonMethod {
                 String setMethodName = "set"+entry.getKey().toString();
                 ReflectUtil.invoke(source,setMethodName,entry.getValue());
             }
-            return MapUtil.isEmpty(gainConditionFromObjectByField(source));
+            return MapUtil.isNotEmpty(gainConditionFromObjectByField(source));
         }
         return false;
     }
@@ -55,7 +55,6 @@ public class CommonMethod {
         HashMap<Object, Object> res = new HashMap<>(obj.getClass().getDeclaredFields().length);
         //取出所有属性
         if (ObjectUtil.isNotNull(obj)){
-
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field f : fields) {
                 String fieldName = f.getName();

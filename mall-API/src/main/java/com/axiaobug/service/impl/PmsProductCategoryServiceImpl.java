@@ -40,7 +40,7 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
         PmsProductCategory productCategory = new PmsProductCategory();
         Boolean isNull = commonMethod.setParamToTarget(pmsProductCategoryParam, productCategory);
 
-        if (!isNull){
+        if (isNull){
             this.categoryRepository.save(productCategory);
             return true;
         }else {
@@ -52,8 +52,8 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
     public Boolean update(Integer id, PmsProductCategoryParam pmsProductCategoryParam) throws Exception {
         if (this.categoryRepository.findById(id).isPresent()) {
             PmsProductCategory source = this.categoryRepository.findById(id).get();
-            Boolean isNull = commonMethod.setParamToTarget(pmsProductCategoryParam, source);
-            if (!isNull){
+            Boolean set = commonMethod.setParamToTarget(pmsProductCategoryParam, source);
+            if (set){
                 this.categoryRepository.save(source);
                 return true;
             }
@@ -92,14 +92,13 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
 
     @Override
     public Boolean updateNavStatus(List<Integer> ids, Integer navStatus) throws Exception {
-        return updateNavOrShowStatus(ids,navStatus,"nav");
+        return updateNavOrShowStatus(ids,navStatus,NAV_METHOD);
 
     }
 
     @Override
     public Boolean updateShowStatus(List<Integer> ids, Integer showStatus) throws Exception {
-        System.out.println(showStatus);
-        return updateNavOrShowStatus(ids,showStatus,"show");
+        return updateNavOrShowStatus(ids,showStatus,SHOW_METHOD);
     }
 
     @Override
@@ -116,8 +115,8 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
             PmsProductCategoryWithChildrenItem source = new PmsProductCategoryWithChildrenItem();
             // 赋值所有非空属性到子类中
             // clone all not null fields to child class
-            Boolean flag = commonMethod.setParamToTarget(category, source);
-            if (flag) {
+            Boolean set = commonMethod.setParamToTarget(category, source);
+            if (!set) {
                 // 实例是用来做example用.
                 // this instance for make example
                 PmsProductCategory exampleChild = new PmsProductCategory();
@@ -131,6 +130,7 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
             return res;
         }
         throw new Exception("Some thing wrong when fetch category and child category");
+
     }
 
 
