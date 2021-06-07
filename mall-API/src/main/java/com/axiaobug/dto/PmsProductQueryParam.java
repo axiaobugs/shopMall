@@ -17,11 +17,11 @@ public class PmsProductQueryParam {
     @ApiModelProperty("审核状态")
     private Integer verifyStatus;
     @ApiModelProperty("商品名称模糊关键字")
-    private String keyword;
+    private String keywords;
     @ApiModelProperty("商品货号")
-    private String productSn;
+    private String productSerialNumber;
     @ApiModelProperty("商品分类编号")
-    private Long productCategoryId;
+    private Integer productCategoryId;
     @ApiModelProperty("商品品牌编号")
-    private Long brandId;
+    private Integer brandId;
 }

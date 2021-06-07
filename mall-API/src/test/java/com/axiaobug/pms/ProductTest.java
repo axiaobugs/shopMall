@@ -1,9 +1,11 @@
 package com.axiaobug.pms;
 
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
 import com.axiaobug.dto.PmsProductParam;
+import com.axiaobug.dto.PmsProductQueryParam;
 import com.axiaobug.pojo.pms.PmsProduct;
 import com.axiaobug.repository.pms.PmsBrandRepository;
 import com.axiaobug.repository.pms.PmsProductRepository;
@@ -21,6 +23,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -92,6 +97,38 @@ public class ProductTest {
         System.out.println(productRepository.findById(3).get().toString());
         Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
         Assertions.assertEquals(3,productRepository.findById(3).get().getBrandId());
+    }
+
+    @DisplayName("查询商品")
+    @Test
+    public void queryProductTest() throws Exception {
+        PmsProductQueryParam queryParam = new PmsProductQueryParam();
+        queryParam.setBrandId(1);
+        queryParam.setProductCategoryId(7);
+
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/product/list")
+                .content(objectMapper.writeValueAsString(queryParam))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
+        Assertions.assertEquals(5,objectMapper.readValue(data, ArrayList.class).size());
+    }
+
+    @DisplayName("根据商品名称或货号模糊查询")
+    @Test
+    public void queryProductByKeywordTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/product/simpleList")
+                .param("keyword","865")
+                .param("field","sn")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
+        Assertions.assertEquals(15,objectMapper.readValue(data, ArrayList.class).size());
     }
 
 

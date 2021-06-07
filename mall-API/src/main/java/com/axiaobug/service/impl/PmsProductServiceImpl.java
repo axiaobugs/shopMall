@@ -12,8 +12,17 @@ import com.axiaobug.repository.pms.PmsProductCategoryRepository;
 import com.axiaobug.repository.pms.PmsProductRepository;
 import com.axiaobug.service.PmsProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,6 +33,8 @@ import java.util.List;
  */
 @Service
 public class PmsProductServiceImpl implements PmsProductService {
+    private static String QUERY_NAME = "name";
+    private static String QUERY_SN = "sn";
 
     @Autowired
     private PmsProductRepository productRepository;
@@ -72,7 +83,29 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Override
     public List<PmsProduct> list(PmsProductQueryParam productQueryParam, Integer pageSize, Integer pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        PmsProduct source = new PmsProduct();
+        Boolean flag = commonMethod.setParamToTarget(productQueryParam, source);
+        if (flag){
+            Example<PmsProduct> example = Example.of(source);
+            return productRepository.findAll(example,pageable).getContent();
+        }
         return null;
+    }
+
+    @Override
+    public List<PmsProduct> list(String keyword,String field) {
+        Specification<PmsProduct> specification = (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = null;
+            if (field.equals(QUERY_NAME)){
+                predicate = criteriaBuilder.like(root.get("name").as(String.class),"%"+keyword+"%");
+            }
+            if (field.equals(QUERY_SN)){
+                predicate = criteriaBuilder.like(root.get("productSerialNumber").as(String.class),"%"+keyword+"%");
+            }
+            return criteriaBuilder.and(predicate);
+        };
+        return productRepository.findAll(specification);
     }
 
     @Override

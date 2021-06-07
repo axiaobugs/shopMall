@@ -39,6 +39,8 @@ public interface PmsProductService {
      */
     List<PmsProduct> list(PmsProductQueryParam productQueryParam, Integer pageSize, Integer pageNum);
 
+    List<PmsProduct> list(String keyword,String field);
+
     /**
      * 批量修改审核状态
      * @param ids 产品id

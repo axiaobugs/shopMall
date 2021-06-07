@@ -50,27 +50,25 @@ public class CommonMethod {
     * @return: map key:field name  value: value of this field(not null)
     */
     public HashMap<Object, Object> gainConditionFromObjectByField(Object obj) {
-
         HashMap<Object, Object> res = new HashMap<>(obj.getClass().getDeclaredFields().length);
-        //取出所有属性
-
-//        Field[] fields = obj.getClass().getDeclaredFields();
-        List<Field> fieldList = new ArrayList<>() ;
-        // 拿到父类且父类有成员变量
-        if (obj.getClass().getSuperclass().getDeclaredFields().length>0) {
-            fieldList.addAll(Arrays.asList(obj.getClass().getSuperclass().getDeclaredFields()));
-        }
-        fieldList.addAll(Arrays.asList(obj.getClass().getDeclaredFields()));
-        for (Field f : fieldList) {
-            String fieldName = f.getName();
-            //取属性值
-            Object value = getFieldValue(obj, fieldName);
-            String k = capitalizeFirstLetter(fieldName);
-            if (ObjectUtil.isNotNull(value)) {
-               res.put(k,value);
+        if (obj.getClass().getDeclaredFields().length>0){
+            List<Field> fieldList = new ArrayList<>() ;
+            // get fields from parent class if have
+            if (obj.getClass().getSuperclass().getDeclaredFields().length>0) {
+                fieldList.addAll(Arrays.asList(obj.getClass().getSuperclass().getDeclaredFields()));
+            }
+            // get fields from this class
+            fieldList.addAll(Arrays.asList(obj.getClass().getDeclaredFields()));
+            for (Field f : fieldList) {
+                String fieldName = f.getName();
+                //取属性值
+                Object value = getFieldValue(obj, fieldName);
+                String k = capitalizeFirstLetter(fieldName);
+                if (ObjectUtil.isNotNull(value)) {
+                    res.put(k,value);
+                }
             }
         }
-
         return res;
     }
 

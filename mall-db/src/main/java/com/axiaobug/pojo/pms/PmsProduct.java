@@ -42,48 +42,48 @@ public class PmsProduct implements Serializable {
    	@Column(name = "product_attribute_category_id" )
 	private Integer productAttributeCategoryId = null;
 
-	private String name = "";
+	private String name = null;
 
 	private String pic = null;
 
 	/**货号*/
    	@Column(name = "product_sn" )
-	private String productSerialNumber = "";
+	private String productSerialNumber = null;
 
 	/**
 	 * 0: no 1: deleted
 	 * 删除状态：0->未删除；1->已删除
 	 * */
    	@Column(name = "delete_status" )
-	private Integer deleteStatus = 0;
+	private Integer deleteStatus = null;
 
 	/**
 	 * 0: out of stock 1 in stock
 	 * 上架状态：0->下架；1->上架
 	 * */
    	@Column(name = "publish_status" )
-	private Integer publishStatus = 1;
+	private Integer publishStatus = null;
 
 	/**
 	 * 0: normal  1:New release
 	 * 新品状态:0->不是新品；1->新品
 	 * */
    	@Column(name = "new_status" )
-	private Integer newStatus = 0;
+	private Integer newStatus = null;
 
 	/**
 	 * 0: normal 1: promote
 	 * 推荐状态；0->不推荐；1->推荐
 	 * */
    	@Column(name = "recommand_status" )
-	private Integer recommendStatus = 0;
+	private Integer recommendStatus = null;
 
 	/**
 	 * 0: no verify 1:verified
 	 * 审核状态：0->未审核；1->审核通过
 	 * */
    	@Column(name = "verify_status" )
-	private Integer verifyStatus = 0;
+	private Integer verifyStatus = null;
 
 	/**排序*/
 	private Integer sort = null;
@@ -93,38 +93,38 @@ public class PmsProduct implements Serializable {
 	 * 销量
 	 * */
    	@Column(name = "sale" )
-	private Integer sale = 0;
+	private Integer sale = null;
 
    	@Column(scale = 2)
-	private BigDecimal price = BigDecimal.valueOf(0);
+	private BigDecimal price = null;
 
 	/**
 	 * promote price
 	 * 促销价格
 	 * */
    	@Column(name = "promotion_price",scale = 2)
-	private BigDecimal promotionPrice = BigDecimal.valueOf(0);
+	private BigDecimal promotionPrice = null;
 
 	/**
 	 * Exp
 	 * 赠送的成长值
 	 * */
    	@Column(name = "gift_growth" )
-	private Integer giftGrowth = 0;
+	private Integer giftGrowth = null;
 
 	/**
 	 * credit
 	 * 赠送的积分
 	 * */
    	@Column(name = "gift_point" )
-	private Integer giftCredit = 0;
+	private Integer giftCredit = null;
 
 	/**
 	 * limit of credit
 	 * 限制使用的积分数
 	 * */
    	@Column(name = "use_point_limit" )
-	private Integer usePointLimit = 0;
+	private Integer usePointLimit = null;
 
    	@Column(name = "sub_title" )
 	private String subtitle = null;
@@ -138,16 +138,16 @@ public class PmsProduct implements Serializable {
 	 * 市场价
 	 * */
    	@Column(name = "original_price", scale = 2)
-	private BigDecimal originalPrice = BigDecimal.valueOf(0);
+	private BigDecimal originalPrice = null;
 
-	private Integer stock = 10;
+	private Integer stock = null;
 
 	/**
 	 * Alert when stock lower than this num
 	 * 库存预警值
 	 * */
    	@Column(name = "low_stock" )
-	private Integer lowStock = 2;
+	private Integer lowStock = null;
 
 	/**
 	 *
@@ -160,14 +160,14 @@ public class PmsProduct implements Serializable {
 	 * 商品重量，默认为克
 	 * */
    	@Column(name = "weight" )
-	private BigDecimal weight = BigDecimal.valueOf(10);
+	private BigDecimal weight = null;
 
 	/**
 	 * 0:No 1:Yes
 	 * 是否为预告商品：0->不是；1->是
 	 * */
    	@Column(name = "preview_status" )
-	private Integer previewStatus = 0;
+	private Integer previewStatus = null;
 
 	/**
 	 * 1: Free to return 2: Refund 3: Free Shipping
@@ -223,13 +223,13 @@ public class PmsProduct implements Serializable {
 	 * 活动限购数量
 	 * */
    	@Column(name = "promotion_per_limit" )
-	private Integer promotionPerLimit = 0;
+	private Integer promotionPerLimit = null;
 
 	/**
 	 * 0: normal 1: promote price 2: member price 3: bulk purchases 4: Further reductions  5:flash sale
 	 * 促销类型：0->没有促销使用原价;1->使用促销价；2->使用会员价；3->使用阶梯价格；4->使用满减价格；5->限时购*/
    	@Column(name = "promotion_type" )
-	private Integer promotionType = 0;
+	private Integer promotionType = null;
 
    	@Column(name = "brand_name" )
 	private String brandName = null;
