@@ -79,7 +79,7 @@ public class ProductTest {
     @DisplayName("根据商品id更新商品信息")
     @Test
     public void updateProductTest() throws Exception {
-        PmsProduct param = new PmsProduct();
+        PmsProductParam param = new PmsProductParam();
         param.setBrandId(3);
         param.setProductSerialNumber("No865774788");
         param.setName("华为 Mate 40");

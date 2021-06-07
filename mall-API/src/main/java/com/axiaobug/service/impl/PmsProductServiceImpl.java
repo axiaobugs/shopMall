@@ -60,7 +60,7 @@ public class PmsProductServiceImpl implements PmsProductService {
     }
 
     @Override
-    public int update(Integer id, PmsProduct productParam) {
+    public int update(Integer id, PmsProductParam productParam) {
         if (productRepository.findById(id).isPresent()) {
             PmsProduct source = productRepository.findById(id).get();
             Boolean flag = commonMethod.setParamToTarget(productParam, source);

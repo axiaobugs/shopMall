@@ -46,7 +46,7 @@ public class PmsProductController {
 
     @ApiOperation("根据商品id更新商品信息")
     @PostMapping(value = "/update/{id}")
-    public CommonResult update(@PathVariable Integer id, @RequestBody PmsProduct productParam) {
+    public CommonResult update(@PathVariable Integer id, @RequestBody PmsProductParam productParam) {
         int count = productService.update(id, productParam);
         if (count > 0) {
             return CommonResult.success(count);

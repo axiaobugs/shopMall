@@ -32,7 +32,7 @@ public interface PmsProductService {
      * 更新商品
      */
     @Transactional
-    int update(Integer id, PmsProduct product);
+    int update(Integer id, PmsProductParam product);
 
     /**
      * 分页查询商品
