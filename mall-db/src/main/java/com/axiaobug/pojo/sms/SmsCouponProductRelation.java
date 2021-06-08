@@ -52,7 +52,7 @@ public class SmsCouponProductRelation implements Serializable {
 
 	/*********************************************************************************/
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "coupon_id",insertable = false,updatable = false)
 	private SmsCoupon smsCoupon;
 }

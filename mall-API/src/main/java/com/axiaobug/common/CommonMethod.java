@@ -32,6 +32,17 @@ public class CommonMethod {
     }
 
 
+    public CommonResult<Boolean> response(Boolean flag){
+        if(flag){
+            return CommonResult.success(true);
+        }
+        return CommonResult.failed();
+    }
+
+    public boolean isEmptyObject(Object obj){
+       return gainConditionFromObjectByField(obj).isEmpty();
+    }
+
     public Boolean setParamToTarget(Object target,Object source){
         HashMap<Object, Object> targetMap = gainConditionFromObjectByField(target);
         if (MapUtil.isNotEmpty(targetMap)){

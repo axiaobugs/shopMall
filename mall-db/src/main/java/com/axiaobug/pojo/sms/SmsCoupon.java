@@ -2,6 +2,8 @@ package com.axiaobug.pojo.sms;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 public class SmsCoupon implements Serializable {
 
-	private static final long serialVersionUID =  3419795740920176388L;
+//	private static final long serialVersionUID =  3419795740920176388L;
 
    	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -150,13 +152,13 @@ public class SmsCoupon implements Serializable {
 
     /*********************************************************************/
 
-    @OneToMany(mappedBy = "smsCoupon")
+    @OneToMany(mappedBy = "smsCoupon",fetch = FetchType.LAZY)
 	private List<SmsCouponHistory> couponHistories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "smsCoupon")
+    @OneToMany(mappedBy = "smsCoupon",cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
 	private List<SmsCouponProductRelation> couponProductRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "smsCoupon")
+    @OneToMany(mappedBy = "smsCoupon",fetch = FetchType.LAZY)
 	private List<SmsCouponProductCategoryRelation> couponProductCategoryRelations = new ArrayList<>();
 
 
