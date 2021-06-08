@@ -22,13 +22,13 @@ public interface SmsCouponService {
      * 根据优惠券id删除优惠券
      */
     @Transactional
-    int delete(Integer id);
+    Boolean delete(Integer id) throws Exception;
 
     /**
      * 根据优惠券id更新优惠券信息
      */
     @Transactional
-    int update(Integer id, SmsCouponParam couponParam);
+    Boolean update(Integer id, SmsCoupon couponParam) throws Exception;
 
     /**
      * 分页获取优惠券列表

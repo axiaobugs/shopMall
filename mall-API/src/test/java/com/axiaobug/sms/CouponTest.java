@@ -3,9 +3,6 @@ package com.axiaobug.sms;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
-import com.axiaobug.dto.PmsProductParam;
-import com.axiaobug.dto.SmsCouponParam;
-import com.axiaobug.pojo.pms.PmsProduct;
 import com.axiaobug.pojo.sms.SmsCoupon;
 import com.axiaobug.pojo.sms.SmsCouponProductRelation;
 import com.axiaobug.repository.pms.PmsProductRepository;
@@ -17,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -60,24 +56,8 @@ public class CouponTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-    @DisplayName("添加优惠券(没有List)")
-    @Test
-    public void createCouponTest() throws Exception {
-        SmsCouponParam param = new SmsCouponParam();
-        param.setName("老板亲戚优惠卷");
-        param.setStartTime(new Date());
-        param.setEndTime(DateUtil.offsetDay(new Date(),7));
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .post("/coupon/create")
-                .content(objectMapper.writeValueAsString(param))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
-        Assertions.assertEquals(15,couponRepository.count());
-    }
-
-    @DisplayName("添加优惠券(没有List)")
+    @DisplayName("添加优惠券")
     @Test
     public void createCouponWithRelationTest() throws Exception {
         ArrayList<SmsCouponProductRelation> smsCouponProductRelations = new ArrayList<>();
@@ -104,5 +84,30 @@ public class CouponTest {
         Assertions.assertEquals(15,couponRepository.count());
         Assertions.assertEquals(2,productRelationRepository.count());
         productRelationRepository.findAll().forEach(System.out::println);
+    }
+
+    @DisplayName("删除优惠券")
+    @Test
+    public void deleteCouponTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .delete("/coupon/delete/22")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        Assertions.assertEquals(13,couponRepository.count());
+    }
+
+    @DisplayName("修改优惠券")
+    @Test
+    public void updateCouponTest() throws Exception {
+        SmsCoupon coupon = couponRepository.findById(22).get();
+        coupon.setName("老板亲戚优惠卷");
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .patch("/coupon/update/22")
+                .content(objectMapper.writeValueAsString(coupon))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        Assertions.assertEquals("老板亲戚优惠卷",couponRepository.findById(22).get().getName());
     }
 }

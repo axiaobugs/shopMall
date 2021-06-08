@@ -26,11 +26,6 @@ public class SmsCouponServiceImpl implements SmsCouponService {
     @Resource
     private SmsCouponRepository couponRepository;
 
-    @Resource
-    private SmsCouponProductRelationRepository productRelationRepository;
-
-    @Resource
-    private SmsCouponProductCategoryRelationRepository categoryRelationRepository;
 
     @Override
     public Boolean create(SmsCoupon couponParam) throws Exception {
@@ -47,13 +42,32 @@ public class SmsCouponServiceImpl implements SmsCouponService {
     }
 
     @Override
-    public int delete(Integer id) {
-        return 0;
+    public Boolean delete(Integer id) throws Exception {
+        if (couponRepository.findById(id).isPresent()){
+            try {
+                couponRepository.deleteById(id);
+                return true;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                return false;
+            }
+        }
+        throw new Exception("删除优惠卷发生异常,操作回滚.请检查id是否正确");
     }
 
     @Override
-    public int update(Integer id, SmsCouponParam couponParam) {
-        return 0;
+    public Boolean update(Integer id, SmsCoupon couponParam) throws Exception {
+        if (couponRepository.findById(id).isPresent()){
+            couponParam.setId(id);
+            try {
+                couponRepository.save(couponParam);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        throw new Exception("更新优惠卷发生异常,操作回滚.请检查id是否正确");
     }
 
     @Override

@@ -8,10 +8,7 @@ import com.axiaobug.service.SmsCouponService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -37,5 +34,17 @@ public class SmsCouponController {
     public CommonResult<Boolean> add(@RequestBody SmsCoupon couponParam) throws Exception {
         return commonMethod.response(couponService.create(couponParam));
     }
+    @ApiOperation("删除优惠券")
+    @DeleteMapping(value = "/delete/{id}")
+    public CommonResult delete(@PathVariable Integer id) throws Exception {
+        return commonMethod.response(couponService.delete(id));
+    }
+
+    @ApiOperation("修改优惠券")
+    @PatchMapping(value = "/update/{id}")
+    public CommonResult update(@PathVariable Integer id,@RequestBody SmsCoupon couponParam) throws Exception {
+        return commonMethod.response(couponService.update(id,couponParam));
+    }
+
 
 }
