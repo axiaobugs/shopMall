@@ -1,30 +1,27 @@
 package com.axiaobug.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
 import com.axiaobug.common.CommonMethod;
 import com.axiaobug.dto.PmsProductParam;
 import com.axiaobug.dto.PmsProductQueryParam;
 import com.axiaobug.dto.PmsProductResult;
 import com.axiaobug.pojo.pms.PmsProduct;
+import com.axiaobug.pojo.pms.PmsProductVertifyRecord;
 import com.axiaobug.repository.pms.PmsProductCategoryRepository;
 import com.axiaobug.repository.pms.PmsProductRepository;
+import com.axiaobug.repository.pms.PmsProductVertifyRecordRepository;
 import com.axiaobug.service.PmsProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import sun.java2d.pipe.SpanIterator;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Yanxiao
@@ -33,16 +30,24 @@ import java.util.List;
  */
 @Service
 public class PmsProductServiceImpl implements PmsProductService {
-    private static String QUERY_NAME = "name";
-    private static String QUERY_SN = "sn";
+    private static final String QUERY_NAME = "name";
+    private static final String QUERY_SN = "sn";
+    private static final String STATUS_VERIFY="verify";
+    private static final String STATUS_PUBLISH="publish";
+    private static final String STATUS_RECOMMEND="recommend";
+    private static final String STATUS_NEW="new";
+    private static final String STATUS_DELETE="delete";
 
-    @Autowired
+    @Resource
     private PmsProductRepository productRepository;
 
-    @Autowired
+    @Resource
     private PmsProductCategoryRepository categoryRepository;
 
-    @Autowired
+    @Resource
+    private PmsProductVertifyRecordRepository recordRepository;
+
+    @Resource
     private CommonMethod commonMethod;
 
     @Override
@@ -75,8 +80,10 @@ public class PmsProductServiceImpl implements PmsProductService {
         if (productRepository.findById(id).isPresent()) {
             PmsProduct source = productRepository.findById(id).get();
             Boolean flag = commonMethod.setParamToTarget(productParam, source);
-            productRepository.save(source);
-            return 1;
+            if (flag){
+                productRepository.save(source);
+                return 1;
+            }
         }
         return 0;
     }
@@ -109,27 +116,83 @@ public class PmsProductServiceImpl implements PmsProductService {
     }
 
     @Override
-    public int updateVerifyStatus(List<Integer> ids, Integer verifyStatus, String detail) {
-        return 0;
+    public Boolean updateVerifyStatus(List<Integer> ids, Integer verifyStatus, String detail) throws Exception {
+        return  editBatch(ids, verifyStatus, "verify",detail);
+
+
     }
 
     @Override
-    public int updatePublishStatus(List<Integer> ids, Integer publishStatus) {
-        return 0;
+    public Boolean updatePublishStatus(List<Integer> ids, Integer publishStatus) throws Exception {
+        return editBatch(ids,publishStatus,"publish",null);
+    }
+
+
+
+    @Override
+    public Boolean updateRecommendStatus(List<Integer> ids, Integer recommendStatus) throws Exception {
+        return editBatch(ids,recommendStatus,"recommend",null);
     }
 
     @Override
-    public int updateRecommendStatus(List<Integer> ids, Integer recommendStatus) {
-        return 0;
-    }
-
-    @Override
-    public int updateDeleteStatus(List<Integer> ids, Integer deleteStatus) {
-        return 0;
+    public Boolean updateDeleteStatus(List<Integer> ids, Integer deleteStatus) throws Exception {
+        return editBatch(ids,deleteStatus,"delete",null);
     }
 
     @Override
     public List<PmsProduct> list(String keyword) {
         return null;
+    }
+
+    private Boolean editBatch(List<Integer> ids,Integer status,String field,String detail) throws Exception {
+        AtomicInteger atomicInteger = new AtomicInteger();
+        if (!ids.isEmpty()){
+            ids.forEach(id->{
+                if (productRepository.findById(id).isPresent()) {
+                    PmsProduct product = productRepository.findById(id).get();
+                    switch (field){
+                        case STATUS_VERIFY:
+                            product.setVerifyStatus(status);
+                            if (status==1) {
+                                PmsProductVertifyRecord vertifyRecord = new PmsProductVertifyRecord();
+                                vertifyRecord.setProductId(id);
+                                vertifyRecord.setCreateTime(new Date());
+                                vertifyRecord.setDetail(detail);
+                                vertifyRecord.setVerifyMan("admin");
+                                vertifyRecord.setStatus(status);
+                                try {
+                                    recordRepository.save(vertifyRecord);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            break;
+                        case STATUS_PUBLISH:
+                            product.setPublishStatus(status);
+                            break;
+                        case STATUS_RECOMMEND:
+                            product.setRecommendStatus(status);
+                            break;
+                        case STATUS_DELETE:
+                            product.setDeleteStatus(status);
+                            break;
+                        case STATUS_NEW:
+                            product.setNewStatus(status);
+                            break;
+                        default:
+                            break;
+                    }
+                    try {
+                        productRepository.save(product);
+                        atomicInteger.incrementAndGet();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            });
+            return ids.size() == atomicInteger.get();
+        }
+        throw new Exception("ids is empty");
     }
 }

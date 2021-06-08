@@ -48,17 +48,17 @@ public interface PmsProductService {
      * @param detail 审核详情
      */
     @Transactional
-    int updateVerifyStatus(List<Integer> ids, Integer verifyStatus, String detail);
+    Boolean updateVerifyStatus(List<Integer> ids, Integer verifyStatus, String detail) throws Exception;
 
     /**
      * 批量修改商品上架状态
      */
-    int updatePublishStatus(List<Integer> ids, Integer publishStatus);
+    Boolean updatePublishStatus(List<Integer> ids, Integer publishStatus) throws Exception;
 
     /**
      * 批量修改商品推荐状态
      */
-    int updateRecommendStatus(List<Integer> ids, Integer recommendStatus);
+    Boolean updateRecommendStatus(List<Integer> ids, Integer recommendStatus) throws Exception;
 
     /**
      * 批量修改新品状Integer
@@ -68,7 +68,7 @@ public interface PmsProductService {
     /**
      * 批量删除商品
      */
-    int updateDeleteStatus(List<Integer> ids, Integer deleteStatus);
+    Boolean updateDeleteStatus(List<Integer> ids, Integer deleteStatus) throws Exception;
 
     /**
      * 根据商品名称或者货号模糊查询

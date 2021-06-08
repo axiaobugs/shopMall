@@ -9,6 +9,7 @@ import com.axiaobug.dto.PmsProductQueryParam;
 import com.axiaobug.pojo.pms.PmsProduct;
 import com.axiaobug.repository.pms.PmsBrandRepository;
 import com.axiaobug.repository.pms.PmsProductRepository;
+import com.axiaobug.repository.pms.PmsProductVertifyRecordRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.util.AssertionErrors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -44,6 +46,9 @@ public class ProductTest {
 
     @Autowired
     private PmsProductRepository productRepository;
+
+    @Autowired
+    private PmsProductVertifyRecordRepository recordRepository;
 
     private MockMvc mockMvc;
 
@@ -131,6 +136,20 @@ public class ProductTest {
         Assertions.assertEquals(15,objectMapper.readValue(data, ArrayList.class).size());
     }
 
-
+    @DisplayName("批量修改审核状态")
+    @Test
+    public void editVerifyStatusByBatchTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .patch("/product/update/verifyStatus")
+                .param("ids","33,34,35")
+                .param("verifyStatus","1")
+                .param("detail","关系户,没有办法只能通过")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
+        Assertions.assertEquals(5,recordRepository.count());
+        Assertions.assertEquals(1,productRepository.findById(33).get().getVerifyStatus());
+    }
 
 }

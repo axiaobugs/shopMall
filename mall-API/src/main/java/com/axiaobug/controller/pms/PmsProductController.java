@@ -47,7 +47,7 @@ public class PmsProductController {
 
     @ApiOperation("根据商品id更新商品信息")
     @PostMapping(value = "/update/{id}")
-    public CommonResult update(@PathVariable Integer id, @RequestBody PmsProductParam productParam) {
+    public CommonResult<Integer> update(@PathVariable Integer id, @RequestBody PmsProductParam productParam) {
         int count = productService.update(id, productParam);
         if (count > 0) {
             return CommonResult.success(count);
@@ -74,7 +74,42 @@ public class PmsProductController {
         return CommonResult.success(productList);
     }
 
+    @ApiOperation("批量修改审核状态")
+    @PatchMapping(value = "/update/verifyStatus")
+    public CommonResult<Boolean> updateVerifyStatus(@RequestParam("ids") List<Integer> ids,
+                                           @RequestParam("verifyStatus") Integer verifyStatus,
+                                           @RequestParam("detail") String detail) throws Exception {
+       return response(productService.updateVerifyStatus(ids, verifyStatus, detail));
+    }
 
+    @ApiOperation("批量上下架")
+    @PatchMapping(value = "/update/publishStatus")
+    public CommonResult<Boolean> updatePublishStatus(@RequestParam("ids") List<Integer> ids,
+                                            @RequestParam("publishStatus") Integer publishStatus) throws Exception {
+        return response(productService.updatePublishStatus(ids, publishStatus));
+    }
+
+    @ApiOperation("批量推荐商品")
+    @PatchMapping(value = "/update/recommendStatus")
+    public CommonResult<Boolean> updateRecommendStatus(@RequestParam("ids") List<Integer> ids,
+                                                       @RequestParam("recommendStatus") Integer recommendStatus) throws Exception {
+        return response(productService.updateRecommendStatus(ids, recommendStatus));
+    }
+
+    @ApiOperation("批量修改删除状态")
+    @PatchMapping(value = "/update/deleteStatus")
+    public CommonResult<Boolean> updateDeleteStatus(@RequestParam("ids") List<Integer> ids,
+                                           @RequestParam("deleteStatus") Integer deleteStatus) throws Exception {
+        return response(productService.updateDeleteStatus(ids, deleteStatus));
+    }
+
+
+    private CommonResult<Boolean> response(Boolean flag){
+        if(flag){
+            return CommonResult.success(true);
+        }
+        return CommonResult.failed();
+    }
 
 
 }
