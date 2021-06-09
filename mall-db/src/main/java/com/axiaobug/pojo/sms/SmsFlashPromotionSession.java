@@ -2,6 +2,8 @@ package com.axiaobug.pojo.sms;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -67,7 +69,8 @@ public class SmsFlashPromotionSession implements Serializable {
 
 	/***********************************************************************************/
 
-	@OneToMany(mappedBy = "smsFlashPromotionSession")
+	@OneToMany(mappedBy = "smsFlashPromotionSession",fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<SmsFlashPromotionProductRelation> flashPromotionProductRelations = new ArrayList<>();
 
 }
