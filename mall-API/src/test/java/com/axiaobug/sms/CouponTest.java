@@ -138,4 +138,20 @@ public class CouponTest {
 
     }
 
+    @DisplayName("获取单个优惠券的详细信息")
+    @Test
+    public void getCouponHistoryByQueryTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/couponHistory/list")
+                .param("couponId","2")
+                .param("pageNum","1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        ArrayList obj = objectMapper.readValue(JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data"),ArrayList.class);
+        Assertions.assertEquals(3,obj.size());
+
+    }
+
+
 }
