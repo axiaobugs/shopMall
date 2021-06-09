@@ -46,8 +46,9 @@ public class SmsFlashPromotionController {
     }
 
     @ApiOperation("修改上下线状态")
-    @PostMapping(value = "/update/status/{id}")
-    public Object update(@PathVariable Integer id, Integer status) throws Exception {
+    @PatchMapping(value = "/update/status/{id}")
+    public Object update(@PathVariable Integer id,
+                         @RequestParam(name = "status") Integer status) throws Exception {
         return commonMethod.response(flashPromotionService.updateStatus(id,status));
     }
 
