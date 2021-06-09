@@ -15,8 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import sun.java2d.pipe.SpanIterator;
-
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 import java.util.Date;
