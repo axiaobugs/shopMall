@@ -91,7 +91,7 @@ public class SmsCoupon implements Serializable {
    	@Column(name = "use_type" )
 	private Integer useType = null;
 
-	private String note = null;
+	private String note;
 
 	/**
      * publish qty
@@ -115,9 +115,9 @@ public class SmsCoupon implements Serializable {
 	private Integer receiveCount = null;
 
    	@Column(name = "enable_time" )
-	private Date enableTime;
+	private Date enableTime = null;
 
-	private String code = null;
+	private String code;
 
 	/**
      * 0: no limit

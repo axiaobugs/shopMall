@@ -3,10 +3,11 @@ package com.axiaobug.service.impl;
 import com.axiaobug.common.CommonMethod;
 import com.axiaobug.dto.SmsCouponParam;
 import com.axiaobug.pojo.sms.SmsCoupon;
-import com.axiaobug.repository.sms.SmsCouponProductCategoryRelationRepository;
-import com.axiaobug.repository.sms.SmsCouponProductRelationRepository;
 import com.axiaobug.repository.sms.SmsCouponRepository;
 import com.axiaobug.service.SmsCouponService;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -72,11 +73,29 @@ public class SmsCouponServiceImpl implements SmsCouponService {
 
     @Override
     public List<SmsCoupon> list(String name, Integer type, Integer pageSize, Integer pageNum) {
-        return null;
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        System.out.println("name: "+name);
+        System.out.println("type: "+type);
+        if (name==null && type==null){
+            System.out.println("jin");
+            return couponRepository.findAll(pageable).getContent();
+        }else {
+            SmsCoupon coupon = new SmsCoupon();
+            if (name!=null){
+                coupon.setName(name);
+            }else if (type!=null){
+                coupon.setType(type);
+            }
+            Example<SmsCoupon> example = Example.of(coupon);
+            return couponRepository.findAll(example,pageable).getContent();
+        }
     }
 
     @Override
-    public SmsCouponParam getItem(Integer id) {
+    public SmsCoupon getItem(Integer id) {
+        if (couponRepository.findById(id).isPresent()){
+            return couponRepository.findById(id).get();
+        }
         return null;
     }
 }

@@ -110,4 +110,32 @@ public class CouponTest {
         Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
         Assertions.assertEquals("老板亲戚优惠卷",couponRepository.findById(22).get().getName());
     }
+
+    @DisplayName("根据优惠券名称和类型分页获取优惠券列表")
+    @Test
+    public void getCouponListByQueryTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/coupon/list")
+                .param("name","全品类通用券")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        ArrayList resList = objectMapper.readValue(JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data"), ArrayList.class);
+        Assertions.assertEquals(4,resList.size());
+
+    }
+
+    @DisplayName("获取单个优惠券的详细信息")
+    @Test
+    public void getCouponByIdTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/coupon/4")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        Object obj = objectMapper.readValue(JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data"),Object.class);
+        Assertions.assertNotEquals(null,obj);
+
+    }
+
 }

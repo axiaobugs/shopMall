@@ -2,6 +2,8 @@ package com.axiaobug.pojo.sms;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 /**
@@ -52,7 +54,8 @@ public class SmsCouponProductCategoryRelation implements Serializable {
 
 	/**********************************************************************/
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "coupon_id",insertable = false,updatable = false)
+	@JsonIgnore
 	private SmsCoupon smsCoupon;
 }
