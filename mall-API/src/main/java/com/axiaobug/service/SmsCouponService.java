@@ -1,6 +1,5 @@
 package com.axiaobug.service;
 
-import com.axiaobug.dto.SmsCouponParam;
 import com.axiaobug.pojo.sms.SmsCoupon;
 import org.springframework.transaction.annotation.Transactional;
 

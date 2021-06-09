@@ -137,6 +137,20 @@ public class FlashPromotionTest {
         Assertions.assertEquals(0,promotion.getStatus());
     }
 
+    @DisplayName("分页查询不同场次关联及商品信息")
+    @Test
+    public void getPromotionProductRelationTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/flashProductRelation/list")
+                .param("flashPromotionId","2")
+                .param("flashPromotionSessionId","1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        ArrayList list = objectMapper.readValue(JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data"), ArrayList.class);
+        Assertions.assertEquals(4,list.size());
+    }
+
 
 
 }

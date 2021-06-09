@@ -2,6 +2,8 @@ package com.axiaobug.pojo.sms;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import java.math.BigDecimal;
 
@@ -82,12 +84,14 @@ public class SmsFlashPromotionProductRelation implements Serializable {
 
 	/**************************************************************************************/
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "flash_promotion_session_id",insertable = false,updatable = false)
+	@JsonIgnore
 	private SmsFlashPromotionSession smsFlashPromotionSession;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "flash_promotion_id",insertable = false,updatable = false)
+	@JsonIgnore
 	private SmsFlashPromotion smsFlashPromotion;
 
 }
