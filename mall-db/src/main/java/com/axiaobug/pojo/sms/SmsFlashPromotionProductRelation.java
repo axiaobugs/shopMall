@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class SmsFlashPromotionProductRelation implements Serializable {
 
-	private static final long serialVersionUID =  1569541633361901100L;
+//	private static final long serialVersionUID =  1569541633361901100L;
 
    	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

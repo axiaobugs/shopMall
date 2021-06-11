@@ -47,7 +47,7 @@ public class SmsHomeAdvertise implements Serializable {
 	 * 0: offline 1: online
 	 * 上下线状态：0->下线；1->上线
 	 * */
-	private Integer status;
+	private Integer status=null;
 
    	@Column(name = "click_count" )
 	private Integer clickCount = null;

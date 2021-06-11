@@ -28,7 +28,7 @@ public class SmsFlashPromotionProductRelationController {
     @Resource
     private CommonMethod commonMethod;
 
-    @ApiOperation("选择商品添加关联")
+    @ApiOperation("添加关联")
     @PostMapping(value = "/create")
     public CommonResult<Boolean> create(@RequestBody SmsFlashPromotionProductRelation relation) {
         return commonMethod.response(relationService.create(relation));

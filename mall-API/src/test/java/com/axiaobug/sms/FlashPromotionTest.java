@@ -4,6 +4,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
 import com.axiaobug.pojo.sms.SmsFlashPromotion;
+import com.axiaobug.pojo.sms.SmsFlashPromotionProductRelation;
+import com.axiaobug.repository.sms.SmsFlashPromotionProductRelationRepository;
 import com.axiaobug.repository.sms.SmsFlashPromotionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +21,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -36,6 +40,9 @@ public class FlashPromotionTest {
 
     @Autowired
     private SmsFlashPromotionRepository promotionRepository;
+
+    @Autowired
+    private SmsFlashPromotionProductRelationRepository relationRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -151,6 +158,22 @@ public class FlashPromotionTest {
         Assertions.assertEquals(4,list.size());
     }
 
+    @DisplayName("添加商品活动关联")
+    @Test
+    public void createPromotionProductRelationTest() throws Exception {
+        SmsFlashPromotionProductRelation relation = new SmsFlashPromotionProductRelation();
+        relation.setFlashPromotionId(13);
+        relation.setFlashPromotionSessionId(1);
+        relation.setProductId(26);
+        relation.setFlashPromotionPrice(BigDecimal.valueOf(1000));
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .post("/flashProductRelation/create")
+                .content(objectMapper.writeValueAsString(relation))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        Assertions.assertEquals(17,relationRepository.count());
+    }
 
 
 }
