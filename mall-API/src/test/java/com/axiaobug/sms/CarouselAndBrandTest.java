@@ -5,8 +5,10 @@ import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
 import com.axiaobug.pojo.sms.SmsFlashPromotionSession;
 import com.axiaobug.pojo.sms.SmsHomeAdvertise;
+import com.axiaobug.pojo.sms.SmsHomeBrand;
 import com.axiaobug.repository.sms.SmsFlashPromotionSessionRepository;
 import com.axiaobug.repository.sms.SmsHomeAdvertiseRepository;
+import com.axiaobug.repository.sms.SmsHomeBrandRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +34,7 @@ import java.util.Date;
  */
 @SpringBootTest(classes = MallApiApplication.class)
 @Transactional
-public class CarouselTest {
+public class CarouselAndBrandTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -41,6 +43,9 @@ public class CarouselTest {
 
     @Autowired
     private SmsHomeAdvertiseRepository advertiseRepository;
+
+    @Autowired
+    private SmsHomeBrandRepository brandRepository;
 
     private MockMvc mockMvc;
 
@@ -95,6 +100,39 @@ public class CarouselTest {
 
     }
 
+    @DisplayName("添加首页推荐品牌")
+    @Test
+    public void createHomeBrandTest() throws Exception {
+        ArrayList<SmsHomeBrand> smsHomeBrands = new ArrayList<>();
+        SmsHomeBrand homeBrand = new SmsHomeBrand();
+        homeBrand.setBrandId(99);
+        homeBrand.setBrandName("SONY");
+        homeBrand.setRecommendStatus(1);
+        smsHomeBrands.add(homeBrand);
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .post("/home/brand/create")
+                .content(objectMapper.writeValueAsString(smsHomeBrands))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        Assertions.assertEquals(14,brandRepository.count());
+
+    }
+
+    @DisplayName("分页查询推荐品牌")
+    @Test
+    public void getBrandByQueryTest() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/home/brand/list")
+                .param("brandName","三星")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals("200", JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("code"));
+        String data = JSONUtil.parseObj(mvcResult.getResponse().getContentAsString()).getStr("data");
+        ArrayList list = objectMapper.readValue(data, ArrayList.class);
+        Assertions.assertEquals(2,list.size());
+
+    }
 
 
 }

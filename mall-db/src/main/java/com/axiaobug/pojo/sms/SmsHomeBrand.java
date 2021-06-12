@@ -17,7 +17,7 @@ import lombok.*;
 @AllArgsConstructor
 public class SmsHomeBrand implements Serializable {
 
-	private static final long serialVersionUID =  1529094669863935103L;
+//	private static final long serialVersionUID =  1529094669863935103L;
 
    	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

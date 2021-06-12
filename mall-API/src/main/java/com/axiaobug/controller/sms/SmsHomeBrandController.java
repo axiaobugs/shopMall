@@ -59,7 +59,7 @@ public class SmsHomeBrandController {
     public CommonResult<List<SmsHomeBrand>> list(@RequestParam(value = "brandName", required = false) String brandName,
                                                        @RequestParam(value = "recommendStatus", required = false) Integer recommendStatus,
                                                        @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
-                                                       @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+                                                       @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum) {
         List<SmsHomeBrand> homeBrandList = homeBrandService.list(brandName, recommendStatus, pageSize, pageNum);
         if(!homeBrandList.isEmpty()){
             return CommonResult.success(homeBrandList);
