@@ -1,6 +1,7 @@
 package com.axiaobug.service;
 
 import com.axiaobug.pojo.sms.SmsHomeAdvertise;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,7 @@ public interface SmsHomeAdvertiseService {
     /**
      * 批量删除广告
      */
+    @Transactional(rollbackFor = Exception.class)
     Boolean delete(List<Integer> ids) throws Exception;
 
     /**

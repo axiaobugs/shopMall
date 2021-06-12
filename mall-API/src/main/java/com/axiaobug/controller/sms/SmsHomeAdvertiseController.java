@@ -1,5 +1,7 @@
 package com.axiaobug.controller.sms;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import com.axiaobug.common.CommonMethod;
 import com.axiaobug.common.CommonResult;
 import com.axiaobug.pojo.sms.SmsHomeAdvertise;
@@ -20,7 +22,7 @@ import java.util.List;
  * @date 06 2021
  */
 @RestController
-@Api(tags = "SmsHomeAdvertiseController")
+@Api(tags = "首页轮播广告管理")
 @RequestMapping("/home/advertise")
 public class SmsHomeAdvertiseController {
     @Resource
@@ -37,7 +39,7 @@ public class SmsHomeAdvertiseController {
     }
 
     @ApiOperation("批量删除广告")
-    @DeleteMapping(value = "/delete/")
+    @DeleteMapping(value = "/delete")
     public CommonResult<Boolean> delete(@RequestParam("ids") List<Integer> ids) throws Exception {
         return commonMethod.response(advertiseService.delete(ids));
     }
@@ -68,9 +70,10 @@ public class SmsHomeAdvertiseController {
     @GetMapping(value = "/list")
     public CommonResult<List<SmsHomeAdvertise>> list(@RequestParam(value = "name", required = false) String name,
                                                            @RequestParam(value = "type", required = false) Integer type,
-                                                           @RequestParam(value = "endTime", required = false) Date endTime,
+                                                           @RequestParam(value = "endTime", required = false) String endTimeString,
                                                            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                            @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum) {
+        DateTime endTime = DateUtil.parse(endTimeString);
         List<SmsHomeAdvertise> advertiseList = advertiseService.list(name, type, endTime, pageSize, pageNum);
         if (advertiseList!=null && advertiseList.size()>0){
             return CommonResult.success(advertiseList);

@@ -21,7 +21,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 public class SmsHomeAdvertise implements Serializable {
 
-	private static final long serialVersionUID =  1259800351884447987L;
+//	private static final long serialVersionUID =  1259800351884447987L;
 
    	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
