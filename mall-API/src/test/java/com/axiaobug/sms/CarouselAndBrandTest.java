@@ -3,10 +3,8 @@ package com.axiaobug.sms;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
-import com.axiaobug.pojo.sms.SmsFlashPromotionSession;
 import com.axiaobug.pojo.sms.SmsHomeAdvertise;
 import com.axiaobug.pojo.sms.SmsHomeBrand;
-import com.axiaobug.repository.sms.SmsFlashPromotionSessionRepository;
 import com.axiaobug.repository.sms.SmsHomeAdvertiseRepository;
 import com.axiaobug.repository.sms.SmsHomeBrandRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +21,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.util.ArrayList;
 import java.util.Date;
 

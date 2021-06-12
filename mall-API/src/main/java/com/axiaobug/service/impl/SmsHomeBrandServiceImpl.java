@@ -4,17 +4,16 @@ import com.axiaobug.common.CommonMethod;
 import com.axiaobug.pojo.sms.SmsHomeBrand;
 import com.axiaobug.repository.sms.SmsHomeBrandRepository;
 import com.axiaobug.service.SmsHomeBrandService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * management new product Service impl
  * @author Yanxiao
  * @version 0.1.0
  * @date 06 2021
@@ -31,7 +30,7 @@ public class SmsHomeBrandServiceImpl implements SmsHomeBrandService {
     @Override
     public Boolean create(List<SmsHomeBrand> homeBrandList) throws Exception {
         AtomicInteger atomicInteger = new AtomicInteger();
-        if (!homeBrandList.isEmpty() && homeBrandList.size()>0 ){
+        if (!homeBrandList.isEmpty()){
             homeBrandList.forEach(homeBrand->{
                 if (!commonMethod.isEmptyObject(homeBrand)){
                     try {

@@ -10,8 +10,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Yanxiao
@@ -30,6 +32,8 @@ public class CommonMethod {
         Date endOfDay = DateUtil.endOfDay(createTime);
         predicates.add(criteriaBuilder.between(root.get(filed).as(String.class), beginOfDay.toString(), endOfDay.toString()));
     }
+
+
 
 
     public CommonResult<Boolean> response(Boolean flag){
