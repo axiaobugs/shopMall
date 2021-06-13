@@ -64,7 +64,7 @@ public class SmsHomeRecommendProductServiceImpl implements SmsHomeRecommendProdu
         if (productName==null && recommendStatus == null){
             return recommendProductRepository.findAll(pageable).getContent();
         }else {
-            Specification<SmsHomeRecommendProduct> specification = commonMethod.createSpecification(productName,recommendStatus);
+            Specification<SmsHomeRecommendProduct> specification = commonMethod.createSpecification(productName,recommendStatus,"productName");
             return recommendProductRepository.findAll(specification,pageable).getContent();
         }
     }

@@ -203,11 +203,16 @@ public class CommonMethod {
         return name.substring(0, 1).toUpperCase() + name.substring(1);
     }
 
-    public <T> Specification<T> createSpecification(String name,Integer status){
+    public <T> Specification<T> createSpecification(String name,Integer status,String method){
         return (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (name!=null){
-                predicates.add(criteriaBuilder.like(root.get("productName").as(String.class),"%"+name+"%"));
+                if ("productName".equals(method)){
+                    predicates.add(criteriaBuilder.like(root.get("productName").as(String.class),"%"+name+"%"));
+                }
+                if ("subjectName".equals(method)){
+                    predicates.add(criteriaBuilder.like(root.get("subjectName").as(String.class),"%"+name+"%"));
+                }
             }
             if (status!=null){
                 predicates.add(criteriaBuilder.equal(root.get("recommendStatus").as(Integer.class),status));
