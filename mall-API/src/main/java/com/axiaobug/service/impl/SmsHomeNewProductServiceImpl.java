@@ -106,7 +106,6 @@ public class SmsHomeNewProductServiceImpl implements SmsHomeNewProductService {
         if (productName==null && recommendStatus == null){
             return productRepository.findAll(pageable).getContent();
         }else {
-            System.out.println(productName);
             Specification<SmsHomeNewProduct> specification = (root, criteriaQuery, criteriaBuilder) -> {
                 List<Predicate> predicates = new ArrayList<>();
                 if (productName!=null){

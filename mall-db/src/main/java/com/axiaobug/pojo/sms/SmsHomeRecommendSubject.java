@@ -18,7 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 public class SmsHomeRecommendSubject implements Serializable {
 
-	private static final long serialVersionUID =  5794716779374118992L;
+//	private static final long serialVersionUID =  5794716779374118992L;
 
    	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
