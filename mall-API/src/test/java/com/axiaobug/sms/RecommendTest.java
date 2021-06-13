@@ -2,9 +2,7 @@ package com.axiaobug.sms;
 
 import cn.hutool.json.JSONUtil;
 import com.axiaobug.MallApiApplication;
-import com.axiaobug.pojo.sms.SmsHomeNewProduct;
 import com.axiaobug.pojo.sms.SmsHomeRecommendProduct;
-import com.axiaobug.repository.sms.SmsHomeNewProductRepository;
 import com.axiaobug.repository.sms.SmsHomeRecommendProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;

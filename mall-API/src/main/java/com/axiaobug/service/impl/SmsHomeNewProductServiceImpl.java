@@ -4,16 +4,12 @@ import com.axiaobug.common.CommonMethod;
 import com.axiaobug.pojo.sms.SmsHomeNewProduct;
 import com.axiaobug.repository.sms.SmsHomeNewProductRepository;
 import com.axiaobug.service.SmsHomeNewProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
-import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Yanxiao

@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.axiaobug.pojo.sms.SmsHomeRecommendProduct;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -36,7 +35,7 @@ public class CommonMethod {
     }
 
 
-    public <T> Boolean createWithList (List<T> list, org.springframework.data.jpa.repository.JpaRepository object) throws Exception {
+    public <T> Boolean createWithList (List<T> list, Object object) throws Exception {
         if (!list.isEmpty()){
             AtomicInteger atomicInteger = new AtomicInteger();
             list.forEach(item->{
