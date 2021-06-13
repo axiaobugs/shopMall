@@ -4,6 +4,7 @@ import com.axiaobug.common.CommonMethod;
 import com.axiaobug.pojo.sms.SmsHomeNewProduct;
 import com.axiaobug.repository.sms.SmsHomeNewProductRepository;
 import com.axiaobug.service.SmsHomeNewProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,26 +24,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SmsHomeNewProductServiceImpl implements SmsHomeNewProductService {
 
     @Resource
-    private SmsHomeNewProductRepository productRepository;
+    private  SmsHomeNewProductRepository productRepository;
 
     @Resource
-    private CommonMethod commonMethod;
+    private  CommonMethod commonMethod;
+
 
     @Override
     public Boolean create(List<SmsHomeNewProduct> homeNewProductList) throws Exception {
-        if (!homeNewProductList.isEmpty()){
-            AtomicInteger atomicInteger = new AtomicInteger();
-            homeNewProductList.forEach(product->{
-                try {
-                    productRepository.save(product);
-                    atomicInteger.incrementAndGet();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            return atomicInteger.get()==homeNewProductList.size();
-        }
-        throw new Exception("提交的数组为空,请检查后重试,操作已回滚");
+        return commonMethod.createWithList(homeNewProductList,productRepository);
     }
 
     @Override
@@ -62,42 +52,12 @@ public class SmsHomeNewProductServiceImpl implements SmsHomeNewProductService {
 
     @Override
     public Boolean delete(List<Integer> ids) throws Exception {
-        if (!ids.isEmpty()){
-            AtomicInteger atomicInteger = new AtomicInteger();
-            ids.forEach(id->{
-                if (productRepository.existsById(id)) {
-                    try {
-                        productRepository.deleteById(id);
-                        atomicInteger.incrementAndGet();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            return atomicInteger.get()==ids.size();
-        }
-        throw new Exception("提交的数组为空,请检查后重试,操作已回滚");
+        return commonMethod.deleteWithList(ids,productRepository);
     }
 
     @Override
     public Boolean updateRecommendStatus(List<Integer> ids, Integer recommendStatus) throws Exception {
-        if (!ids.isEmpty()&& recommendStatus!=null){
-            AtomicInteger atomicInteger = new AtomicInteger();
-            ids.forEach(id->{
-                if (productRepository.findById(id).isPresent()) {
-                    SmsHomeNewProduct homeNewProduct = productRepository.findById(id).get();
-                    homeNewProduct.setRecommendStatus(recommendStatus);
-                    try {
-                        productRepository.save(homeNewProduct);
-                        atomicInteger.incrementAndGet();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            return atomicInteger.get()==ids.size();
-        }
-        throw new Exception("提交的数组为空或推荐状态为空,请检查后重试,操作已回滚");
+        return commonMethod.updateStatusWithList(ids,recommendStatus,productRepository);
     }
 
     @Override
@@ -106,17 +66,10 @@ public class SmsHomeNewProductServiceImpl implements SmsHomeNewProductService {
         if (productName==null && recommendStatus == null){
             return productRepository.findAll(pageable).getContent();
         }else {
-            Specification<SmsHomeNewProduct> specification = (root, criteriaQuery, criteriaBuilder) -> {
-                List<Predicate> predicates = new ArrayList<>();
-                if (productName!=null){
-                    predicates.add(criteriaBuilder.like(root.get("productName").as(String.class),"%"+productName+"%"));
-                }
-                if (recommendStatus!=null){
-                    predicates.add(criteriaBuilder.equal(root.get("recommendStatus").as(Integer.class),recommendStatus));
-                }
-                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-            };
+            Specification<SmsHomeNewProduct> specification = commonMethod.createSpecification(productName,recommendStatus);
             return productRepository.findAll(specification,pageable).getContent();
         }
     }
+
+
 }

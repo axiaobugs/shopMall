@@ -4,6 +4,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import com.axiaobug.pojo.sms.SmsHomeRecommendProduct;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -34,6 +36,74 @@ public class CommonMethod {
     }
 
 
+    public <T> Boolean createWithList (List<T> list, org.springframework.data.jpa.repository.JpaRepository object) throws Exception {
+        if (!list.isEmpty()){
+            AtomicInteger atomicInteger = new AtomicInteger();
+            list.forEach(item->{
+                try {
+                    Method method = object.getClass().getMethod("save",Object.class);
+                    System.out.println("method: "+method);
+                    method.invoke(object,item);
+                    atomicInteger.incrementAndGet();
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            });
+            return atomicInteger.get()==list.size();
+        }
+        throw new Exception("提交的数组为空,请检查后重试,操作已回滚");
+    }
+
+    public Boolean deleteWithList (List<Integer> list, Object object) throws Exception {
+        Method existsById = object.getClass().getMethod("existsById", Object.class);
+        Method deleteById = object.getClass().getMethod("deleteById", Object.class);
+        if (!list.isEmpty()){
+            AtomicInteger atomicInteger = new AtomicInteger();
+            list.forEach(item->{
+                try {
+                    if ((Boolean) existsById.invoke(object,item)){
+                        deleteById.invoke(object,item);
+                        atomicInteger.incrementAndGet();
+                    }
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            });
+            return atomicInteger.get()== list.size();
+        }
+
+        throw new Exception("提交的数组为空,请检查后重试,操作已回滚");
+    }
+
+    public <T> Boolean updateStatusWithList(List<Integer> list, Integer status,Object object) throws NoSuchMethodException {
+        if (list.isEmpty() || status==null){
+            return false;
+        }else{
+            AtomicInteger atomicInteger = new AtomicInteger();
+            Method findById = object.getClass().getMethod("findById", Object.class);
+            Method save = object.getClass().getMethod("save", Object.class);
+            list.forEach(id->{
+                try {
+                    Optional optional =(Optional) findById.invoke(object, id);
+                    if (optional.isPresent()){
+                        Object res =  optional.get();
+                        Method setRecommendStatus = res.getClass().getMethod("setRecommendStatus", Integer.class);
+                        setRecommendStatus.invoke(res,status);
+                        try {
+                            save.invoke(object,res);
+                            atomicInteger.incrementAndGet();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+
+            });
+            return atomicInteger.get()==list.size();
+        }
+    }
 
 
     public CommonResult<Boolean> response(Boolean flag){
@@ -43,11 +113,11 @@ public class CommonMethod {
         return CommonResult.failed();
     }
 
-    public boolean isEmptyObject(Object obj){
+    public boolean isEmptyObject(java.io.Serializable obj){
        return gainConditionFromObjectByField(obj).isEmpty();
     }
 
-    public Boolean setParamToTarget(Object target,Object source){
+    public Boolean setParamToTarget(Object target, java.io.Serializable source){
         HashMap<Object, Object> targetMap = gainConditionFromObjectByField(target);
         if (MapUtil.isNotEmpty(targetMap)){
             for (Map.Entry<Object,Object> entry:targetMap.entrySet()) {
@@ -133,6 +203,20 @@ public class CommonMethod {
     private String capitalizeFirstLetter(String name){
         return name.substring(0, 1).toUpperCase() + name.substring(1);
     }
+
+    public <T> Specification<T> createSpecification(String name,Integer status){
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (name!=null){
+                predicates.add(criteriaBuilder.like(root.get("productName").as(String.class),"%"+name+"%"));
+            }
+            if (status!=null){
+                predicates.add(criteriaBuilder.equal(root.get("recommendStatus").as(Integer.class),status));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+    }
+
 
 }
 

@@ -47,7 +47,7 @@ public class SmsHomeRecommendProductController {
     @ApiOperation("批量修改推荐状态")
     @PatchMapping(value = "/update/recommendStatus")
     public CommonResult<Boolean> updateRecommendStatus(@RequestParam("ids") List<Integer> ids,
-                                                       @RequestParam("status") Integer recommendStatus) {
+                                                       @RequestParam("status") Integer recommendStatus) throws NoSuchMethodException {
         return commonMethod.response(recommendProductService.updateRecommendStatus(ids,recommendStatus));
     }
 

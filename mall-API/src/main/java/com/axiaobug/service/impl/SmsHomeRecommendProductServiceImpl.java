@@ -30,21 +30,7 @@ public class SmsHomeRecommendProductServiceImpl implements SmsHomeRecommendProdu
 
     @Override
     public Boolean create(List<SmsHomeRecommendProduct> homeRecommendProductList) throws Exception {
-        if (!homeRecommendProductList.isEmpty()){
-            AtomicInteger atomicInteger = new AtomicInteger();
-            homeRecommendProductList.forEach(recommendProduct->{
-                if (!commonMethod.isEmptyObject(recommendProduct)){
-                    try {
-                        recommendProductRepository.save(recommendProduct);
-                        atomicInteger.incrementAndGet();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            return atomicInteger.get()==homeRecommendProductList.size();
-        }
-        throw new Exception("提交数组为空,请检查后,重新提交");
+        return commonMethod.createWithList(homeRecommendProductList,recommendProductRepository);
     }
 
     @Override
@@ -67,43 +53,12 @@ public class SmsHomeRecommendProductServiceImpl implements SmsHomeRecommendProdu
 
     @Override
     public Boolean delete(List<Integer> ids) throws Exception {
-        if (!ids.isEmpty()){
-            AtomicInteger atomicInteger = new AtomicInteger();
-            ids.forEach(id->{
-                if (recommendProductRepository.existsById(id)){
-                    try {
-                        recommendProductRepository.deleteById(id);
-                        atomicInteger.incrementAndGet();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            return atomicInteger.get()==ids.size();
-        }
-        throw new Exception(",请检查后,重新提交");
+        return commonMethod.deleteWithList(ids,recommendProductRepository);
     }
 
     @Override
-    public Boolean updateRecommendStatus(List<Integer> ids, Integer recommendStatus) {
-        if (ids.isEmpty() || recommendStatus==null){
-            return false;
-        }else{
-            AtomicInteger atomicInteger = new AtomicInteger();
-            ids.forEach(id->{
-                if (recommendProductRepository.findById(id).isPresent()){
-                    SmsHomeRecommendProduct recommendProduct = recommendProductRepository.findById(id).get();
-                    recommendProduct.setRecommendStatus(recommendStatus);
-                    try {
-                        recommendProductRepository.save(recommendProduct);
-                        atomicInteger.incrementAndGet();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            return atomicInteger.get()==ids.size();
-        }
+    public Boolean updateRecommendStatus(List<Integer> ids, Integer recommendStatus) throws NoSuchMethodException {
+        return commonMethod.updateStatusWithList(ids,recommendStatus,recommendProductRepository);
     }
 
     @Override
@@ -112,16 +67,7 @@ public class SmsHomeRecommendProductServiceImpl implements SmsHomeRecommendProdu
         if (productName==null && recommendStatus == null){
             return recommendProductRepository.findAll(pageable).getContent();
         }else {
-            Specification<SmsHomeRecommendProduct> specification = (root, criteriaQuery, criteriaBuilder) -> {
-                List<Predicate> predicates = new ArrayList<>();
-                if (productName!=null){
-                    predicates.add(criteriaBuilder.like(root.get("productName").as(String.class),"%"+productName+"%"));
-                }
-                if (recommendStatus!=null){
-                    predicates.add(criteriaBuilder.equal(root.get("recommendStatus").as(Integer.class),recommendStatus));
-                }
-                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-            };
+            Specification<SmsHomeRecommendProduct> specification = commonMethod.createSpecification(productName,recommendStatus);
             return recommendProductRepository.findAll(specification,pageable).getContent();
         }
     }

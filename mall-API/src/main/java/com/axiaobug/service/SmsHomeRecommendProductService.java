@@ -32,7 +32,7 @@ public interface SmsHomeRecommendProductService {
      * 批量更新推荐状态
      */
     @Transactional(rollbackFor = Exception.class)
-    Boolean updateRecommendStatus(List<Integer> ids, Integer recommendStatus);
+    Boolean updateRecommendStatus(List<Integer> ids, Integer recommendStatus) throws NoSuchMethodException;
 
     /**
      * 分页查询推荐
