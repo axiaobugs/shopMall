@@ -31,7 +31,6 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.axiaobug.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .globalRequestParameters(getGlobalRequestParameters())
                 .globalResponses(HttpMethod.GET, getGlobalResonseMessage())
                 .globalResponses(HttpMethod.POST, getGlobalResonseMessage());
     }
@@ -45,34 +44,6 @@ public class SwaggerConfig {
                 .build();
     }
 
-    private List<RequestParameter> getGlobalRequestParameters() {
-        List<RequestParameter> parameters = new ArrayList<>();
-        parameters.add(new RequestParameterBuilder()
-                .name("appid")
-                .description("平台id")
-                .required(true)
-                .in(ParameterType.QUERY)
-                .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
-                .required(false)
-                .build());
-        parameters.add(new RequestParameterBuilder()
-                .name("udid")
-                .description("设备的唯一id")
-                .required(true)
-                .in(ParameterType.QUERY)
-                .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
-                .required(false)
-                .build());
-        parameters.add(new RequestParameterBuilder()
-                .name("version")
-                .description("客户端的版本号")
-                .required(true)
-                .in(ParameterType.QUERY)
-                .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
-                .required(false)
-                .build());
-        return parameters;
-    }
 
     //生成通用响应信息
     private List<Response> getGlobalResonseMessage() {

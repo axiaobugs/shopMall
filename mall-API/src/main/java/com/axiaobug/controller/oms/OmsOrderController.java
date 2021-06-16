@@ -22,6 +22,7 @@ import java.util.List;
  * @date 05 2021
  */
 @RestController
+@CrossOrigin
 @Api(tags = "OmsOrderController")
 @RequestMapping("/order")
 public class OmsOrderController {
